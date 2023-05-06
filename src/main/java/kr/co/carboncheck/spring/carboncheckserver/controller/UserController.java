@@ -5,9 +5,9 @@ import kr.co.carboncheck.spring.carboncheckserver.dto.*;
 import kr.co.carboncheck.spring.carboncheckserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -30,7 +30,8 @@ public class UserController {
         user.setUserId(NULL);
         user.setGroupId(NULL);
         user.setEmail(joinRequestDTO.getEmail());
-        user.setPassword(joinRequestDTO.getPassword());
+        String hashedPassword = new BCryptPasswordEncoder().encode(joinRequestDTO.getPassword());
+        user.setPassword(hashedPassword);
         user.setName(joinRequestDTO.getName());
         user.setAuthType(joinRequestDTO.getAuthType());
 
@@ -42,7 +43,10 @@ public class UserController {
 
         String email = loginRequestDTO.getEmail();
         String password = loginRequestDTO.getPassword();
-
+        //        String hashedPassword = new BCryptPasswordEncoder().encode(loginRequestDTO.getPassword());
+        // 비밀번호는 Controller에서 암호화 후 Service로 넘기는게 좋지만,
+        // BcryptPasswordEncoder의 matches()함수는 raw password와 hashed password를 비교해야 해서
+        // 암호화 하지 않고 넘겼다. 개선할 수 있으면 해보자
         return ResponseEntity.ok().body(userService.login(email, password));
     }
 }
