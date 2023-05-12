@@ -1,7 +1,6 @@
-package kr.co.carboncheck.spring.carboncheckserver.repository;
+package kr.co.carboncheck.spring.carboncheckserver.repository.user;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
-import kr.co.carboncheck.spring.carboncheckserver.dto.JoinResponseDTO;
 
 import java.util.Optional;
 

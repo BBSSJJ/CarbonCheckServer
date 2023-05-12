@@ -1,10 +1,10 @@
-package kr.co.carboncheck.spring.carboncheckserver.dto;
+package kr.co.carboncheck.spring.carboncheckserver.dto.user;
 
-public class LoginResponseDTO {
+public class JoinResponse {
     private boolean success;
     private String message;
 
-    public LoginResponseDTO(boolean success, String message) {
+    public JoinResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
     }

@@ -1,12 +1,12 @@
-package kr.co.carboncheck.spring.carboncheckserver.dto;
+package kr.co.carboncheck.spring.carboncheckserver.dto.user;
 
-public class JoinRequestDTO {
+public class JoinRequest {
     private String email;
     private String password;
     private String name;
     private String authType;
 
-    public JoinRequestDTO(String email, String password, String name, String authType) {
+    public JoinRequest(String email, String password, String name, String authType) {
         this.email = email;
         this.password = password;
         this.name = name;
