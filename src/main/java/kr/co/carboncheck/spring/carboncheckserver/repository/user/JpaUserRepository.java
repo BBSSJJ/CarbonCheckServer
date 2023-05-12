@@ -1,15 +1,12 @@
-package kr.co.carboncheck.spring.carboncheckserver.repository;
+package kr.co.carboncheck.spring.carboncheckserver.repository.user;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
-import kr.co.carboncheck.spring.carboncheckserver.dto.JoinResponseDTO;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
-@Component
 @Repository
 public class JpaUserRepository implements UserRepository {
     private final EntityManager em;
@@ -23,7 +20,6 @@ public class JpaUserRepository implements UserRepository {
     public boolean saveUser(User user) {
         System.out.println("email is " + user.getEmail());
         em.persist(user);
-        System.out.println("in repository");
         return true;
     }
 
