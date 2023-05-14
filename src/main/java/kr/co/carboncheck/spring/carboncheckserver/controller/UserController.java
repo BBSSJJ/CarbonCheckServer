@@ -5,7 +5,8 @@ import kr.co.carboncheck.spring.carboncheckserver.dto.user.JoinRequest;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.JoinResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.LoginRequest;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.LoginResponse;
-import kr.co.carboncheck.spring.carboncheckserver.service.user.UserServiceImpl;
+import kr.co.carboncheck.spring.carboncheckserver.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -17,9 +18,10 @@ import static java.sql.Types.NULL;
 @Controller
 public class UserController {
 
-    private UserServiceImpl userService;
+    private UserService userService;
 
-    public UserController(UserServiceImpl userService) {
+    @Autowired
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -27,7 +29,7 @@ public class UserController {
     public ResponseEntity<JoinResponse> join(@RequestBody JoinRequest joinRequest) {
         User user = new User();
         user.setUserId(NULL);
-        user.setGroupId(NULL);
+//        user.setHomeServerId(String.valueOf(NULL));
         user.setEmail(joinRequest.getEmail());
         String hashedPassword = new BCryptPasswordEncoder().encode(joinRequest.getPassword());
         user.setPassword(hashedPassword);

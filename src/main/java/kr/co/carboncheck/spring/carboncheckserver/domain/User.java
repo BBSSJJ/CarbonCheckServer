@@ -11,8 +11,8 @@ public class User {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "group_id")
-    private int groupId;
+    @Column(name = "home_server_id")
+    private String homeServerId;
 
     private String email;
     private String name;
@@ -27,12 +27,12 @@ public class User {
         this.userId = userId;
     }
 
-    public int getGroupId() {
-        return groupId;
+    public String getHomeServerId() {
+        return homeServerId;
     }
 
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
+    public void setHomeServerId(String homeServerId) {
+        this.homeServerId = homeServerId;
     }
 
     public String getEmail() {

@@ -1,6 +1,7 @@
 package kr.co.carboncheck.spring.carboncheckserver.repository.user;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -11,7 +12,7 @@ import java.util.Optional;
 public class JpaUserRepository implements UserRepository {
     private final EntityManager em;
 
-
+    @Autowired
     public JpaUserRepository(EntityManager em) {
         this.em = em;
     }
@@ -20,6 +21,13 @@ public class JpaUserRepository implements UserRepository {
     public boolean saveUser(User user) {
         System.out.println("email is " + user.getEmail());
         em.persist(user);
+        return true;
+    }
+
+    @Override
+    public boolean updateHomeServerId(User user, String homeServerId) {
+        user.setHomeServerId(homeServerId);
+        em.merge(user);
         return true;
     }
 
