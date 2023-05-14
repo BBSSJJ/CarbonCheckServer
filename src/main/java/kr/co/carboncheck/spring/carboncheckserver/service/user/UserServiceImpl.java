@@ -4,6 +4,7 @@ import kr.co.carboncheck.spring.carboncheckserver.domain.User;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.JoinResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.LoginResponse;
 import kr.co.carboncheck.spring.carboncheckserver.repository.user.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,10 @@ import java.util.Optional;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
+
     private UserRepository userRepository;
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
