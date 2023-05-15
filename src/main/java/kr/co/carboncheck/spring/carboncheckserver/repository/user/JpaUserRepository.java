@@ -39,7 +39,6 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        System.out.println("in find by email");
         List<User> result = em.createQuery("select m from User m where m.email = :email", User.class)
                 .setParameter("email", email)
                 .getResultList();
