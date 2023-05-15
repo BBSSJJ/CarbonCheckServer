@@ -2,6 +2,7 @@ package kr.co.carboncheck.spring.carboncheckserver.service.device;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.HomeServer;
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
+import kr.co.carboncheck.spring.carboncheckserver.dto.device.JoinHomeServerResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.device.RegisterHomeServerResponse;
 import kr.co.carboncheck.spring.carboncheckserver.repository.device.HomeServerRepository;
 import kr.co.carboncheck.spring.carboncheckserver.repository.user.UserRepository;
@@ -27,7 +28,7 @@ public class HomeServerDeviceServiceImpl implements DeviceService {
     @Override
     public RegisterHomeServerResponse createHomeServer(String homeServerId, String email) {
         // email을 이용해서 UserRepository에서 user id 를 가져온닷
-        System.out.println("홈서버 등록 유저 이메일: " + email + "홈서버 아이디: " + "homeserverId");
+        System.out.println("홈서버 등록 유저 이메일: " + email + "홈서버 아이디: " + homeServerId);
         Optional<User> userOptional = userRepository.findByEmail(email);
         Optional<HomeServer> homeServerOptional = homeServerRepository.findByHomeServerId(homeServerId);
         if (!userOptional.isPresent()) {
@@ -38,16 +39,31 @@ public class HomeServerDeviceServiceImpl implements DeviceService {
         }
         User user = userOptional.get();
 
-        System.out.println("여기까지1");
         HomeServer homeServer = new HomeServer();
         homeServer.setHomeServerId(homeServerId);
         homeServerRepository.saveHomeServer(homeServer);
-        System.out.println("여기까지2");
 
         userRepository.updateHomeServerId(user, homeServerId);
-        System.out.println("여기까지3");
 
 
         return new RegisterHomeServerResponse(true, "기기가 성공적으로 등록되었습니다");
+    }
+
+    @Override
+    public JoinHomeServerResponse joinHomeServer(String homeServerId, String email){
+        System.out.println("홈서버 참여 유저 이메일: " + email + "홈서버 아이디: " + homeServerId);
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<HomeServer> homeServerOptional = homeServerRepository.findByHomeServerId(homeServerId);
+        if (!userOptional.isPresent()) {
+            return new JoinHomeServerResponse(false, "잘못된 유저 정보 입니다.");
+        }
+        if (!homeServerOptional.isPresent()) {
+            return new JoinHomeServerResponse(false, "등록되지 않은 기기입니다.");
+        }
+        User user = userOptional.get();
+
+        userRepository.updateHomeServerId(user, homeServerId);
+
+        return new JoinHomeServerResponse(true, "정상적으로 참여하셨습니다.");
     }
 }

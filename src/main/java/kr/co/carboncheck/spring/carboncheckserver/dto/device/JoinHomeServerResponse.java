@@ -1,11 +1,11 @@
 package kr.co.carboncheck.spring.carboncheckserver.dto.device;
 
-public class RegisterHomeServerResponse {
+public class JoinHomeServerResponse {
     private Boolean success;
     private String message;
 
 
-    public RegisterHomeServerResponse(Boolean success, String message) {
+    public JoinHomeServerResponse(Boolean success, String message) {
         this.success = success;
         this.message = message;
     }
