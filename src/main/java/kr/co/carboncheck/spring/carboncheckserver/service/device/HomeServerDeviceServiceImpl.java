@@ -8,8 +8,8 @@ import kr.co.carboncheck.spring.carboncheckserver.repository.device.HomeServerRe
 import kr.co.carboncheck.spring.carboncheckserver.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Transactional
@@ -50,7 +50,7 @@ public class HomeServerDeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public JoinHomeServerResponse joinHomeServer(String homeServerId, String email){
+    public JoinHomeServerResponse joinHomeServer(String homeServerId, String email) {
         System.out.println("홈서버 참여 유저 이메일: " + email + "홈서버 아이디: " + homeServerId);
         Optional<User> userOptional = userRepository.findByEmail(email);
         Optional<HomeServer> homeServerOptional = homeServerRepository.findByHomeServerId(homeServerId);
