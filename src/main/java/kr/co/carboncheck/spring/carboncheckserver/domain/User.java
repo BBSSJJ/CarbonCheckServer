@@ -17,6 +17,8 @@ public class User {
     private String email;
     private String name;
     private String password;
+
+    @Column(name = "auth_type")
     private String authType;
 
     public int getUserId() {

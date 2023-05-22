@@ -1,18 +1,16 @@
 package kr.co.carboncheck.spring.carboncheckserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.carboncheck.spring.carboncheckserver.WebSocketConfig;
 import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
 import kr.co.carboncheck.spring.carboncheckserver.domain.WaterUsage;
 import kr.co.carboncheck.spring.carboncheckserver.service.usage.UsageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -39,11 +37,15 @@ public class UsageHandler extends TextWebSocketHandler {
         if (requestUrl.equals("/waterusage/insert")) {
             String waterUsageData = message.getPayload();
 
-            String[] waterUsageDataArray = objectMapper.readValue(waterUsageData, String[].class);
-            for(String waterUsageJson: waterUsageDataArray){
-                WaterUsage waterUsage = objectMapper.readValue(waterUsageJson, WaterUsage.class);
+            // JSON 배열을 맵의 배열로 역직렬화
+            Map<String, Object>[] waterUsageDataMap = objectMapper.readValue(waterUsageData, Map[].class);
+
+            // 각 맵 요소를 객체로 변환하고 처리
+            for (Map<String, Object> waterUsageMap : waterUsageDataMap) {
+                WaterUsage waterUsage = objectMapper.convertValue(waterUsageMap, WaterUsage.class);
                 waterUsageService.insertUsage(waterUsage);
             }
+
             //받은 데이터를 객체로 변환
 //            WaterUsage waterUsage = objectMapper.readValue(waterUsageData, WaterUsage.class);
 //            waterUsageService.insertUsage(waterUsage);
