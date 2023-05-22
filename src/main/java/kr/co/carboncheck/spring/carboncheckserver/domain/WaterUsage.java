@@ -1,5 +1,8 @@
 package kr.co.carboncheck.spring.carboncheckserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -8,16 +11,18 @@ public class WaterUsage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "water_usage_id")
+    @JsonProperty("water_usage_id")
     private int waterUsageId;
 
-    @Column(name = "user_id")
+    @JsonProperty("user_id")
     private int userId;
 
-    @Column(name = "start_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("start_time")
     private LocalDateTime startTime;
 
-    @Column(name = "end_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("end_time")
     private LocalDateTime endTime;
 
     private String place;
