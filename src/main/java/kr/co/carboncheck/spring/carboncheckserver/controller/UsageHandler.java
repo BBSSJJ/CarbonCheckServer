@@ -13,14 +13,14 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.Map;
 import java.util.Objects;
 
-@Controller
+//@Controller
 public class UsageHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final UsageService<WaterUsage> waterUsageService;
     private final UsageService<ElectricityUsage> electricityUsageService;
 
-    @Autowired
+//    @Autowired
     public UsageHandler(ObjectMapper objectMapper,
                         UsageService<WaterUsage> waterUsageService,
                         UsageService<ElectricityUsage> electricityUsageService) {

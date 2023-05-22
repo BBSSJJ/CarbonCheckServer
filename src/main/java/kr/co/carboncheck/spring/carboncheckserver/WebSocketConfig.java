@@ -7,14 +7,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.*;
 
-@Configuration
-@EnableWebSocket
-@ComponentScan
+
+//@Configuration
+//@EnableWebSocket
+//@ComponentScan
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final UsageHandler usageHandler;
 
-    @Autowired
+//    @Autowired
     public WebSocketConfig(UsageHandler usageHandler) {
         this.usageHandler = usageHandler;
     }
