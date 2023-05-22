@@ -1,11 +1,10 @@
 package kr.co.carboncheck.spring.carboncheckserver;
 
 
-import kr.co.carboncheck.spring.carboncheckserver.handler.UsageHandler;
+import kr.co.carboncheck.spring.carboncheckserver.controller.UsageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
