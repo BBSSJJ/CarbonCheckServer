@@ -1,9 +1,11 @@
-package kr.co.carboncheck.spring.carboncheckserver.handler;
+package kr.co.carboncheck.spring.carboncheckserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.carboncheck.spring.carboncheckserver.WebSocketConfig;
+import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
 import kr.co.carboncheck.spring.carboncheckserver.domain.WaterUsage;
 import kr.co.carboncheck.spring.carboncheckserver.service.usage.UsageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -18,10 +20,15 @@ public class UsageHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final UsageService<WaterUsage> waterUsageService;
+    private final UsageService<ElectricityUsage> electricityUsageService;
 
-    public UsageHandler(ObjectMapper objectMapper, UsageService<WaterUsage> waterUsageService) {
+    @Autowired
+    public UsageHandler(ObjectMapper objectMapper,
+                        UsageService<WaterUsage> waterUsageService,
+                        UsageService<ElectricityUsage> electricityUsageService) {
         this.objectMapper = objectMapper;
         this.waterUsageService = waterUsageService;
+        this.electricityUsageService = electricityUsageService;
     }
 
     //websocket 사용할 때는 Rest API와 달리 일반적으로 dto사용하지 않고 Json 형식의 텍스트 메세지 이용
@@ -32,14 +39,18 @@ public class UsageHandler extends TextWebSocketHandler {
         if (requestUrl.equals("/waterusage/insert")) {
             String waterUsageData = message.getPayload();
 
+            String[] waterUsageDataArray = objectMapper.readValue(waterUsageData, String[].class);
+            for(String waterUsageJson: waterUsageDataArray){
+                WaterUsage waterUsage = objectMapper.readValue(waterUsageJson, WaterUsage.class);
+                waterUsageService.insertUsage(waterUsage);
+            }
             //받은 데이터를 객체로 변환
-            WaterUsage waterUsage = objectMapper.readValue(waterUsageData, WaterUsage.class);
-            waterUsageService.insertUsage(waterUsage);
+//            WaterUsage waterUsage = objectMapper.readValue(waterUsageData, WaterUsage.class);
+//            waterUsageService.insertUsage(waterUsage);
 
             String response = "등록 성공!";
             session.sendMessage(new TextMessage(response));
         } else if (requestUrl.equals("/electricityusage/insert")) {
-
         }
     }
 }
