@@ -61,7 +61,9 @@ public class UserController {
         if(userOptional.isPresent()){
             User user = userOptional.get();
             getUserDataResponse.setUserId(String.valueOf(user.getUserId()));
-            getUserDataResponse.setHomeServerId(user.getHomeServerId());
+            if(user.getHomeServerId() != null){
+                getUserDataResponse.setHomeServerId(user.getHomeServerId());
+            }
             getUserDataResponse.setName(user.getName());
         }
         return ResponseEntity.ok().body(getUserDataResponse);
