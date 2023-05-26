@@ -3,6 +3,7 @@ package kr.co.carboncheck.spring.carboncheckserver.controller;
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.*;
 import kr.co.carboncheck.spring.carboncheckserver.service.user.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,19 +54,25 @@ public class UserController {
     }
 
     @GetMapping("/get/user_data")
-    public ResponseEntity<GetUserDataResponse> getUserData(@RequestParam("email") String email){
+    public ResponseEntity<GetUserDataResponse> getUserData(@RequestParam("email") String email) {
         System.out.println("int get Uset Data");
         Optional<User> userOptional = userService.getUserByEmail(email);
-        GetUserDataResponse getUserDataResponse =  new GetUserDataResponse("", "", "");
+        GetUserDataResponse getUserDataResponse = new GetUserDataResponse("", "", "");
 
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             getUserDataResponse.setUserId(String.valueOf(user.getUserId()));
-            if(user.getHomeServerId() != null){
+            if (user.getHomeServerId() != null) {
                 getUserDataResponse.setHomeServerId(user.getHomeServerId());
             }
             getUserDataResponse.setName(user.getName());
         }
         return ResponseEntity.ok().body(getUserDataResponse);
+    }
+
+    @PostMapping("/face/register")
+    public ResponseEntity<RegisterFaceResponse> registerFace(@RequestBody RegisterFaceRequest registerFaceRequest) {
+
+        return ResponseEntity.ok().body(new RegisterFaceResponse());
     }
 }
