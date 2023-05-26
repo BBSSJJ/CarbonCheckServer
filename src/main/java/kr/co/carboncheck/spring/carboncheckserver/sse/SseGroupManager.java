@@ -20,12 +20,9 @@ public class SseGroupManager {
         if (group == null) {
             group = new SseGroup(homeServerId);
             groups.put(homeServerId, group);
+            group.addSubscriber(subscriber);
         } else {
-            //이미 등록되어 있으면 등록하지 않음
-            List<Subscriber> subscribers = group.getSubscribers();
-            for (Subscriber sub : subscribers) {
-                if (!Objects.equals(sub.getId(), subscriber.getId())) group.addSubscriber(subscriber);
-            }
+            group.addSubscriber(subscriber);
         }
     }
 
@@ -42,10 +39,10 @@ public class SseGroupManager {
     public void findSubscribers(String homeServerId) {
         SseGroup group = groups.get(homeServerId);
         if (group == null) {
-            System.out.println("no group");
         } else {
             List<Subscriber> subscribers = group.getSubscribers();
             for (Subscriber subscriber : subscribers) {
+                System.out.println("now connected subscribers");
                 System.out.println(subscriber.getId());
             }
         }
