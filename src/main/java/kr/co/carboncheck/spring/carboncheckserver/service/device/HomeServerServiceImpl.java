@@ -14,13 +14,13 @@ import java.util.Optional;
 
 @Transactional
 @Service
-public class HomeServerDeviceServiceImpl implements DeviceService {
+public class HomeServerServiceImpl implements HomeServerService {
 
-    private UserRepository userRepository;
-    private HomeServerRepository homeServerRepository;
+    private final UserRepository userRepository;
+    private final HomeServerRepository homeServerRepository;
 
     @Autowired
-    HomeServerDeviceServiceImpl(HomeServerRepository homeServerRepository, UserRepository userRepository) {
+    HomeServerServiceImpl(HomeServerRepository homeServerRepository, UserRepository userRepository) {
         this.userRepository = userRepository;
         this.homeServerRepository = homeServerRepository;
     }
