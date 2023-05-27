@@ -1,10 +1,9 @@
 package kr.co.carboncheck.spring.carboncheckserver.controller;
 
-import kr.co.carboncheck.spring.carboncheckserver.dto.device.JoinHomeServerRequest;
-import kr.co.carboncheck.spring.carboncheckserver.dto.device.JoinHomeServerResponse;
-import kr.co.carboncheck.spring.carboncheckserver.dto.device.RegisterHomeServerRequest;
-import kr.co.carboncheck.spring.carboncheckserver.dto.device.RegisterHomeServerResponse;
-import kr.co.carboncheck.spring.carboncheckserver.service.device.DeviceService;
+import kr.co.carboncheck.spring.carboncheckserver.domain.Plug;
+import kr.co.carboncheck.spring.carboncheckserver.dto.device.*;
+import kr.co.carboncheck.spring.carboncheckserver.service.device.HomeServerService;
+import kr.co.carboncheck.spring.carboncheckserver.service.device.PlugService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class DeviceController {
-    private DeviceService deviceService;
+    private HomeServerService homeServerService;
+    private PlugService plugService;
 
     @Autowired
-    DeviceController(DeviceService deviceService) {
-        this.deviceService = deviceService;
+    DeviceController(HomeServerService homeServerService, PlugService plugService) {
+        this.homeServerService = homeServerService;
+        this.plugService = plugService;
     }
 
     @PostMapping("/homeserver/register")
@@ -25,7 +26,7 @@ public class DeviceController {
         System.out.println("홈서버 등록 요청");
         String homeServerId = registerHomeServerRequest.getHomeServerId();
         String email = registerHomeServerRequest.getEmail();
-        return ResponseEntity.ok().body(deviceService.createHomeServer(homeServerId, email));
+        return ResponseEntity.ok().body(homeServerService.createHomeServer(homeServerId, email));
     }
 
     @PostMapping("/homeserver/join")
@@ -33,6 +34,13 @@ public class DeviceController {
         System.out.println("홈서버 등록 요청");
         String homeServerId = joinHomeServerRequest.getHomeServerId();
         String email = joinHomeServerRequest.getEmail();
-        return ResponseEntity.ok().body(deviceService.joinHomeServer(homeServerId, email));
+        return ResponseEntity.ok().body(homeServerService.joinHomeServer(homeServerId, email));
+    }
+
+    @PostMapping("/plug/register")
+    public ResponseEntity<RegisterPlugResponse> registerPlug(@RequestBody RegisterPlugRequest registerPlugRequest){
+        System.out.println("플러그 등록");
+        Plug plug = new Plug(registerPlugRequest.getPlugId(), registerPlugRequest.getUserId());
+        return ResponseEntity.ok().body(plugService.registerPlug(plug));
     }
 }

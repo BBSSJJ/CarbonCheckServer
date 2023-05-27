@@ -2,6 +2,8 @@ package kr.co.carboncheck.spring.carboncheckserver.controller;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
 import kr.co.carboncheck.spring.carboncheckserver.domain.WaterUsage;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.InsertElectricityUsageRequest;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.InsertElectricityUsageResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.usage.InsertWaterUsageRequest;
 import kr.co.carboncheck.spring.carboncheckserver.dto.usage.InsertWaterUsageResponse;
 import kr.co.carboncheck.spring.carboncheckserver.service.usage.UsageService;
@@ -26,12 +28,19 @@ public class UsageController {
     }
 
     @PostMapping("/waterusage/insert")
-    public ResponseEntity<InsertWaterUsageResponse> insertWaterUsage(@RequestBody List<WaterUsage> waterUsageList){
-        for(WaterUsage waterUsage : waterUsageList){
-            waterUsageService.insertUsage(waterUsage);
+    public ResponseEntity<InsertWaterUsageResponse> insertWaterUsage(@RequestBody List<WaterUsage> waterUsageList) {
+        for (WaterUsage waterUsage : waterUsageList) {
+            if (!waterUsageService.insertUsage(waterUsage))
+                return ResponseEntity.ok().body(new InsertWaterUsageResponse(false));
         }
         return ResponseEntity.ok().body(new InsertWaterUsageResponse(true));
 
+    }
+
+    @PostMapping("/electricityusage/insert")
+    public ResponseEntity<InsertElectricityUsageResponse> insertElectricityUsage(@RequestBody InsertElectricityUsageRequest insertElectricityUsageRequest) {
+        ElectricityUsage electricityUsage = new ElectricityUsage(insertElectricityUsageRequest.getPlugId(), insertElectricityUsageRequest.getAmount());
+        return ResponseEntity.ok().body(new InsertElectricityUsageResponse(electricityUsageService.insertUsage(electricityUsage)));
     }
 
 
