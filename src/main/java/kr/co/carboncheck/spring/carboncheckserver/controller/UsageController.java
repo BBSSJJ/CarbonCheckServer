@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,10 @@ public class UsageController {
 
     @PostMapping("/electricityusage/insert")
     public ResponseEntity<InsertElectricityUsageResponse> insertElectricityUsage(@RequestBody InsertElectricityUsageRequest insertElectricityUsageRequest) {
-        ElectricityUsage electricityUsage = new ElectricityUsage(insertElectricityUsageRequest.getPlugId(), insertElectricityUsageRequest.getAmount());
+        ElectricityUsage electricityUsage = new ElectricityUsage();
+        electricityUsage.setPlugId(insertElectricityUsageRequest.getPlugId());
+        electricityUsage.setAmount(insertElectricityUsageRequest.getAmount());
+        electricityUsage.setDate(LocalDateTime.now());
         return ResponseEntity.ok().body(new InsertElectricityUsageResponse(electricityUsageService.insertUsage(electricityUsage)));
     }
 
