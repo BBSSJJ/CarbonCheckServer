@@ -1,10 +1,6 @@
 package kr.co.carboncheck.spring.carboncheckserver.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,18 +11,41 @@ public class ElectricityUsage {
     private int electricityUsageId;
 
     @Column(name = "plug_id")
-    private int plugId;
+    private String plugId;
 
     private LocalDateTime date;
 
     private float amount;
 
-    public ElectricityUsage(int plugId, float amount) {
-        this.plugId = plugId;
-        this.amount = amount;
-        this.date = LocalDateTime.now();
+    public int getElectricityUsageId() {
+        return electricityUsageId;
     }
 
-    public ElectricityUsage() {
+    public void setElectricityUsageId(int electricityUsageId) {
+        this.electricityUsageId = electricityUsageId;
+    }
+
+    public String getPlugId() {
+        return plugId;
+    }
+
+    public void setPlugId(String plugId) {
+        this.plugId = plugId;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public float getAmount() {
+        return amount;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
     }
 }

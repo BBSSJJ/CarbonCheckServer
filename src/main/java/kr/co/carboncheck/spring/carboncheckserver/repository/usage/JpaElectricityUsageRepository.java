@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.List;
 
 @Repository
 public class JpaElectricityUsageRepository implements UsageRepository<ElectricityUsage> {
@@ -20,5 +23,27 @@ public class JpaElectricityUsageRepository implements UsageRepository<Electricit
     public boolean insert(ElectricityUsage usage) {
         em.persist(usage);
         return true;
+    }
+
+    @Override
+    public boolean updateUsage(ElectricityUsage usage) {
+        em.merge(usage);
+        return true;
+    }
+
+    public List<ElectricityUsage> findByPlugIdAndDate(String plugId, LocalDateTime date) {
+        int year = date.getYear();
+        int month = date.getMonth().getValue();
+        int day = date.getDayOfMonth();
+        List<ElectricityUsage> results = em.createQuery("select e from ElectricityUsage e " +
+                        "where e.plugId = :plugId " +
+                        "and YEAR(e.date) = :year " +
+                        "and MONTH(e.date) =: month " +
+                        "and DAY(e.date) =: day", ElectricityUsage.class)
+                .setParameter("plugId", plugId)
+                .setParameter("year", year)
+                .setParameter("month", month)
+                .setParameter("day", day).getResultList();
+        return results;
     }
 }

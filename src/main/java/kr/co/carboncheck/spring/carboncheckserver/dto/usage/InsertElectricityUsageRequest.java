@@ -3,16 +3,17 @@ package kr.co.carboncheck.spring.carboncheckserver.dto.usage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class InsertElectricityUsageRequest {
+
     @JsonProperty("plug_id")
-    private int plugId;
+    private String plugId;
 
     private float amount;
 
-    public int getPlugId() {
+    public String getPlugId() {
         return plugId;
     }
 
-    public void setPlugId(int plugId) {
+    public void setPlugId(String plugId) {
         this.plugId = plugId;
     }
 
