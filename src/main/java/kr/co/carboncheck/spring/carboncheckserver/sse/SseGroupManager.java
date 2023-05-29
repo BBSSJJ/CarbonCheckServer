@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class SseGroupManager {
@@ -36,7 +35,7 @@ public class SseGroupManager {
         }
     }
 
-    public void findSubscribers(String homeServerId) {
+    public void findAllSubscribers(String homeServerId) {
         SseGroup group = groups.get(homeServerId);
         if (group == null) {
         } else {
@@ -47,4 +46,19 @@ public class SseGroupManager {
             }
         }
     }
+
+    public SseGroup findGroup(String homeServerId){
+        return groups.get(homeServerId);
+    }
+
+    public Subscriber findSubscriber(String homeServerId, String objectId){
+        SseGroup group = groups.get(homeServerId);
+        if(group != null){
+            return group.findSubscriber(objectId);
+        }
+        return null;
+    }
+
+
+
 }
