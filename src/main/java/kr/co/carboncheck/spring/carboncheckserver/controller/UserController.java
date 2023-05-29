@@ -3,16 +3,19 @@ package kr.co.carboncheck.spring.carboncheckserver.controller;
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.*;
 import kr.co.carboncheck.spring.carboncheckserver.service.user.UserService;
+import kr.co.carboncheck.spring.carboncheckserver.sse.SseGroup;
+import kr.co.carboncheck.spring.carboncheckserver.sse.SseGroupManager;
+import kr.co.carboncheck.spring.carboncheckserver.sse.Subscriber;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import static java.sql.Types.NULL;
@@ -21,10 +24,12 @@ import static java.sql.Types.NULL;
 public class UserController {
 
     private UserService userService;
+    private SseGroupManager sseGroupManager;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, SseGroupManager sseGroupManager) {
         this.userService = userService;
+        this.sseGroupManager = sseGroupManager;
     }
 
     @PostMapping("/join")
@@ -70,9 +75,25 @@ public class UserController {
         return ResponseEntity.ok().body(getUserDataResponse);
     }
 
+
     @PostMapping("/face/register")
     public ResponseEntity<RegisterFaceResponse> registerFace(@RequestBody RegisterFaceRequest registerFaceRequest) {
-
-        return ResponseEntity.ok().body(new RegisterFaceResponse());
+        String homeServerId = registerFaceRequest.getHomeServerId();
+        String userId = registerFaceRequest.getUserId();
+        SseGroup sseGroup = sseGroupManager.findGroup(homeServerId);
+        if(sseGroup != null){
+            Subscriber subscriber = sseGroup.findSubscriber(homeServerId);
+            if (subscriber != null) {
+                try {
+                    SseEmitter emitter = subscriber.getEmitter();
+                    // ADD USER와 user ID보내줘야함
+                    emitter.send(SseEmitter.event().data(String.format("\"msg\": \"%s\", \"id\": \"%s\", \"success\": %b ", "add", userId, true)));
+                    return ResponseEntity.ok().body(new RegisterFaceResponse(true, "얼굴 등록 요청 완료"));
+                } catch (IOException e) {
+                    return ResponseEntity.ok().body(new RegisterFaceResponse(false, e.getMessage()));
+                }
+            }
+        }
+        return ResponseEntity.ok().body(new RegisterFaceResponse(false, "SSE 그룹에 홈서버가 없습니다."));
     }
 }

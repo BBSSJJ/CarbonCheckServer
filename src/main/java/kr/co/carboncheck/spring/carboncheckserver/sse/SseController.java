@@ -1,6 +1,8 @@
 package kr.co.carboncheck.spring.carboncheckserver.sse;
 
+import kr.co.carboncheck.spring.carboncheckserver.dto.user.JoinResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -26,11 +28,12 @@ public class SseController {
         System.out.println("in subscribe to group");
         SseEmitter emitter = new SseEmitter(0L);
         Subscriber subscriber = new Subscriber(objectId);
+        subscriber.setEmitter(emitter);
 
         sseGroupManager.addSubscriberToGroup(homeServerId, subscriber);
 
         //test
-        sseGroupManager.findSubscribers(homeServerId);
+        sseGroupManager.findAllSubscribers(homeServerId);
 
         //emitter가 닫혔으면 종료하도록
         AtomicBoolean EmitterClosed = new AtomicBoolean(false);
@@ -47,7 +50,7 @@ public class SseController {
             EmitterClosed.set(true);
         });
 
-        emitter.send(SseEmitter.event().name("sse").data("connected"));
+        emitter.send(SseEmitter.event().data(String.format("\"msg\": \"%s\", \"id\": %s, \"success\": %b ", "dummy", null, true)));
 
         maintainConnection(emitter, EmitterClosed);
 
@@ -60,7 +63,7 @@ public class SseController {
             if (!EmitterClosed.get()) {
                 try {
                     System.out.println("sse 연결 유지용 데이터 전송");
-                    emitter.send(SseEmitter.event().data("to maintain connection"));
+                    emitter.send(SseEmitter.event().data(String.format("\"msg\": \"%s\", \"id\": %s, \"success\": %b ", "dummy", null, true)));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -73,4 +76,5 @@ public class SseController {
     private void stopConnection(SseEmitter emitter) {
         emitter.complete();
     }
+
 }

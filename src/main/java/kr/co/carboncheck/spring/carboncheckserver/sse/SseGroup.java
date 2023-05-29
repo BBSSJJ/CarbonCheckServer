@@ -23,4 +23,13 @@ public class SseGroup {
     public List<Subscriber> getSubscribers() {
         return subscribers;
     }
+
+    public Subscriber findSubscriber(String objectId){
+        for(Subscriber subscriber : subscribers){
+            if(subscriber.getId().equals(objectId)){
+                return subscriber;
+            }
+        }
+        return null;
+    }
 }
