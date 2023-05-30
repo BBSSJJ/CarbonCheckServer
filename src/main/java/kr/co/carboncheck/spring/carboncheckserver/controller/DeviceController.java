@@ -31,7 +31,7 @@ public class DeviceController {
 
     @PostMapping("/homeserver/join")
     public ResponseEntity<JoinHomeServerResponse> joinHomeServer(@RequestBody JoinHomeServerRequest joinHomeServerRequest) {
-        System.out.println("홈서버 등록 요청");
+        System.out.println("홈서버 참여 요청");
         String homeServerId = joinHomeServerRequest.getHomeServerId();
         String email = joinHomeServerRequest.getEmail();
         return ResponseEntity.ok().body(homeServerService.joinHomeServer(homeServerId, email));
@@ -40,7 +40,7 @@ public class DeviceController {
     @PostMapping("/plug/register")
     public ResponseEntity<RegisterPlugResponse> registerPlug(@RequestBody RegisterPlugRequest registerPlugRequest){
         System.out.println("플러그 등록");
-        Plug plug = new Plug(registerPlugRequest.getPlugId(), registerPlugRequest.getUserId());
-        return ResponseEntity.ok().body(plugService.registerPlug(plug));
+
+        return ResponseEntity.ok().body(plugService.registerPlug(registerPlugRequest.getPlugId(), registerPlugRequest.getUserId()));
     }
 }

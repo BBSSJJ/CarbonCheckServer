@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static java.sql.Types.NULL;
+
 @Controller
 public class UsageController {
     private final UsageService<WaterUsage> waterUsageService;
@@ -31,6 +33,7 @@ public class UsageController {
     @PostMapping("/waterusage/insert")
     public ResponseEntity<InsertWaterUsageResponse> insertWaterUsage(@RequestBody List<WaterUsage> waterUsageList) {
         for (WaterUsage waterUsage : waterUsageList) {
+            if(waterUsage.getUserId() == NULL) continue;
             if (!waterUsageService.insertUsage(waterUsage))
                 return ResponseEntity.ok().body(new InsertWaterUsageResponse(false));
         }

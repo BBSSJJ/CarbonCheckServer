@@ -1,6 +1,7 @@
 package kr.co.carboncheck.spring.carboncheckserver.service.usage;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
+import kr.co.carboncheck.spring.carboncheckserver.repository.device.PlugRepository;
 import kr.co.carboncheck.spring.carboncheckserver.repository.usage.UsageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import java.util.List;
 public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsage> {
 
     private UsageRepository<ElectricityUsage> usageRepository;
+    private PlugRepository plugRepository;
 
     @Autowired
-    public ElectricityUsageServiceImpl(UsageRepository<ElectricityUsage> usageRepository) {
+    public ElectricityUsageServiceImpl(UsageRepository<ElectricityUsage> usageRepository, PlugRepository plugRepository) {
         this.usageRepository = usageRepository;
+        this.plugRepository = plugRepository;
     }
 
     @Override
@@ -26,6 +29,11 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
         //TODO 전기사용량은 지금 날짜로 등록된거 가져와서 수정한 뒤 넣어야 함!!!
         String plugId = usage.getPlugId();
         LocalDateTime date = usage.getDate();
+
+        if(!plugRepository.findByPlugId(usage.getPlugId()).isPresent()){
+            System.out.println("등록되지 않은 플러그");
+            return false;
+        }
 
         List<ElectricityUsage> list = usageRepository.findByPlugIdAndDate(plugId, date);
         if (list.isEmpty()) {

@@ -18,18 +18,17 @@ public class PlugServiceImpl implements PlugService {
     }
 
     @Override
-    public RegisterPlugResponse registerPlug(Plug plug) {
+    public RegisterPlugResponse registerPlug(String plugId, String userId) {
         //TODO: 이미 등록된 플러그인지 확인
-
-        RegisterPlugResponse registerPlugResponse = new RegisterPlugResponse();
-        if (plugRepository.savePlug(plug)) {
-            registerPlugResponse.setSuccess(true);
-            registerPlugResponse.setMessage("플러그가 등록되었습니다.");
+        if (plugRepository.findByPlugId(plugId).isPresent()) {
+            return new RegisterPlugResponse(false, "이미 등록된 플러그입니다.");
         } else {
-            registerPlugResponse.setSuccess(false);
-            registerPlugResponse.setMessage("플러그 등록에 실패했습니다.");
+            Plug plug = new Plug(plugId, userId);
+            if (plugRepository.savePlug(plug)) {
+                return new RegisterPlugResponse(true, "플러그가 등록되었습니다.");
+            } else {
+                return new RegisterPlugResponse(false, "플러그가 등록에 실패하였습니다.");
+            }
         }
-
-        return registerPlugResponse;
     }
 }

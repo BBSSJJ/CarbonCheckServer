@@ -5,13 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Repository
 public class JpaPlugRepository implements PlugRepository {
     private final EntityManager em;
 
     @Autowired
-    public JpaPlugRepository(EntityManager em){
+    public JpaPlugRepository(EntityManager em) {
         this.em = em;
     }
 
@@ -19,5 +20,11 @@ public class JpaPlugRepository implements PlugRepository {
     public boolean savePlug(Plug plug) {
         em.persist(plug);
         return true;
+    }
+
+    @Override
+    public Optional<Plug> findByPlugId(String plugId) {
+        Plug plug = em.find(Plug.class, plugId);
+        return Optional.ofNullable(plug);
     }
 }
