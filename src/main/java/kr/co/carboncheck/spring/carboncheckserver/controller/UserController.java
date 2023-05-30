@@ -81,7 +81,7 @@ public class UserController {
         String homeServerId = registerFaceRequest.getHomeServerId();
         String userId = registerFaceRequest.getUserId();
         SseGroup sseGroup = sseGroupManager.findGroup(homeServerId);
-        if(sseGroup != null){
+        if (sseGroup != null) {
             Subscriber subscriber = sseGroup.findSubscriber(homeServerId);
             if (subscriber != null) {
                 try {
@@ -98,19 +98,21 @@ public class UserController {
     }
 
     @PostMapping("/training_done")
-    public ResponseEntity<Boolean> registerFaceFinish(@RequestBody RegisterFaceFinish registerFaceFinish){
+    public ResponseEntity<Boolean> registerFaceFinish(@RequestBody RegisterFaceFinish registerFaceFinish) {
         String userId = registerFaceFinish.getUserId();
         boolean result = registerFaceFinish.getResult();
         String homeServerId = registerFaceFinish.getHomeServerId();
 
         SseGroup sseGroup = sseGroupManager.findGroup(homeServerId);
+        System.out.println("in registerFaceFinish");
 
-        if(sseGroup != null){
+        if (sseGroup != null) {
             Subscriber subscriber = sseGroup.findSubscriber(userId);
-            if(subscriber != null){
-                try{
+            if (subscriber != null) {
+                try {
                     SseEmitter emitter = subscriber.getEmitter();
-                    if(result) {
+                    if (result) {
+                        System.out.println("사용자에게 얼굴 등록 끝남 메세지 보냄");
                         emitter.send(SseEmitter.event().data("face register finish"));
                     }
                     return ResponseEntity.ok().body(true);
@@ -118,6 +120,17 @@ public class UserController {
                     return ResponseEntity.ok().body(false);
                 }
             }
+            Subscriber home_subscriber = sseGroup.findSubscriber(homeServerId);
+            try {
+                System.out.println("홈서버에게 얼굴 등록 끝남 메세지 보냄");
+                SseEmitter emitter = home_subscriber.getEmitter();
+                emitter.send(SseEmitter.event().data(String.format("{\"msg\": \"%s\", \"id\": %s, \"success\": %b }", "done", null, true)));
+
+                return ResponseEntity.ok().body(true);
+            } catch (IOException e) {
+                return ResponseEntity.ok().body(false);
+            }
+
         }
         return ResponseEntity.ok().body(false);
     }
