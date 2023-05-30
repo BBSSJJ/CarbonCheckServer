@@ -50,7 +50,7 @@ public class SseController {
             EmitterClosed.set(true);
         });
 
-        emitter.send(SseEmitter.event().data(String.format("\"msg\": \"%s\", \"id\": %s, \"success\": %b ", "dummy", null, true)));
+        emitter.send(SseEmitter.event().data(String.format("{\"msg\": \"%s\", \"id\": %s, \"success\": %b }", "dummy", null, true)));
 
         maintainConnection(emitter, EmitterClosed);
 
@@ -63,7 +63,7 @@ public class SseController {
             if (!EmitterClosed.get()) {
                 try {
                     System.out.println("sse 연결 유지용 데이터 전송");
-                    emitter.send(SseEmitter.event().data(String.format("\"msg\": \"%s\", \"id\": %s, \"success\": %b ", "dummy", null, true)));
+                    emitter.send(SseEmitter.event().data(String.format("{\"msg\": \"%s\", \"id\": %s, \"success\": %b }", "dummy", null, true)));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

@@ -40,8 +40,8 @@ public class SseGroupManager {
         if (group == null) {
         } else {
             List<Subscriber> subscribers = group.getSubscribers();
+            System.out.println("now connected subscribers");
             for (Subscriber subscriber : subscribers) {
-                System.out.println("now connected subscribers");
                 System.out.println(subscriber.getId());
             }
         }
