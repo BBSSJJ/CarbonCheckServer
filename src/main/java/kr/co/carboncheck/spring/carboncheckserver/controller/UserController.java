@@ -96,4 +96,29 @@ public class UserController {
         }
         return ResponseEntity.ok().body(new RegisterFaceResponse(false, "SSE 그룹에 홈서버가 없습니다."));
     }
+
+    @PostMapping("/training_done")
+    public ResponseEntity<Boolean> registerFaceFinish(@RequestBody RegisterFaceFinish registerFaceFinish){
+        String userId = registerFaceFinish.getUserId();
+        boolean result = registerFaceFinish.getResult();
+        String homeServerId = registerFaceFinish.getHomeServerId();
+
+        SseGroup sseGroup = sseGroupManager.findGroup(homeServerId);
+
+        if(sseGroup != null){
+            Subscriber subscriber = sseGroup.findSubscriber(userId);
+            if(subscriber != null){
+                try{
+                    SseEmitter emitter = subscriber.getEmitter();
+                    if(result) {
+                        emitter.send(SseEmitter.event().data("face register finish"));
+                    }
+                    return ResponseEntity.ok().body(true);
+                } catch (IOException e) {
+                    return ResponseEntity.ok().body(false);
+                }
+            }
+        }
+        return ResponseEntity.ok().body(false);
+    }
 }
