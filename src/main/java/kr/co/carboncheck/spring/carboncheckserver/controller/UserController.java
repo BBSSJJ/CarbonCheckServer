@@ -87,7 +87,7 @@ public class UserController {
                 try {
                     SseEmitter emitter = subscriber.getEmitter();
                     // ADD USER와 user ID보내줘야함
-                    emitter.send(SseEmitter.event().data(String.format("\"msg\": \"%s\", \"id\": \"%s\", \"success\": %b ", "add", userId, true)));
+                    emitter.send(SseEmitter.event().data(String.format("{\"msg\": \"%s\", \"id\": \"%s\", \"success\": %b }", "add", userId, true)));
                     return ResponseEntity.ok().body(new RegisterFaceResponse(true, "얼굴 등록 요청 완료"));
                 } catch (IOException e) {
                     return ResponseEntity.ok().body(new RegisterFaceResponse(false, e.getMessage()));

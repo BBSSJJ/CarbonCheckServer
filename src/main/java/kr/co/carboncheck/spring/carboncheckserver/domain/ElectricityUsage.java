@@ -15,7 +15,7 @@ public class ElectricityUsage {
 
     private LocalDateTime date;
 
-    private float amount;
+    private int amount;
 
     public int getElectricityUsageId() {
         return electricityUsageId;
@@ -41,11 +41,11 @@ public class ElectricityUsage {
         this.date = date;
     }
 
-    public float getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 }
