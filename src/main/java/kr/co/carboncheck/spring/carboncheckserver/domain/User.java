@@ -21,6 +21,9 @@ public class User {
     @Column(name = "auth_type")
     private String authType;
 
+    @Column(name = "target_amount")
+    private int targetAmount;
+
     public int getUserId() {
         return userId;
     }
@@ -57,9 +60,7 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setPassword(String password) { this.password = password; }
 
     public String getAuthType() {
         return authType;
@@ -68,4 +69,8 @@ public class User {
     public void setAuthType(String authType) {
         this.authType = authType;
     }
+
+    public int getTargetAmount() { return targetAmount; }
+
+    public void setTargetAmount(int targetAmount) { this.targetAmount = targetAmount; }
 }

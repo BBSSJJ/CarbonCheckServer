@@ -38,6 +38,9 @@ public class HomeServerServiceImpl implements HomeServerService {
             return new RegisterHomeServerResponse(false, "이미 등록된 기기 입니다.");
         }
         User user = userOptional.get();
+        if(user.getHomeServerId() != null){
+            return new RegisterHomeServerResponse(false, "이미 홈서버에 가입되어 있습니다.");
+        }
 
         HomeServer homeServer = new HomeServer();
         homeServer.setHomeServerId(homeServerId);
@@ -46,7 +49,7 @@ public class HomeServerServiceImpl implements HomeServerService {
         userRepository.updateHomeServerId(user, homeServerId);
 
 
-        return new RegisterHomeServerResponse(true, "기기가 성공적으로 등록되었습니다");
+        return new RegisterHomeServerResponse(true, "기기가 성공적으로 등록되었습니다.");
     }
 
     @Override
@@ -61,6 +64,10 @@ public class HomeServerServiceImpl implements HomeServerService {
             return new JoinHomeServerResponse(false, "등록되지 않은 기기입니다.");
         }
         User user = userOptional.get();
+
+        if(user.getHomeServerId() != null){
+            return new JoinHomeServerResponse(false, "이미 홈서버에 가입되어 있습니다.");
+        }
 
         userRepository.updateHomeServerId(user, homeServerId);
 
