@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JpaElectricityUsageRepository implements UsageRepository<ElectricityUsage> {
@@ -29,6 +30,14 @@ public class JpaElectricityUsageRepository implements UsageRepository<Electricit
     public boolean updateUsage(ElectricityUsage usage) {
         em.merge(usage);
         return true;
+    }
+
+    public Map<String, Float> findTodayUserUsage(String userId) {
+        return null;
+    }
+
+    public Map<String, Float> findTodayGroupUsage(String homeServerId) {
+        return null;
     }
 
     public List<ElectricityUsage> findByPlugIdAndDate(String plugId, LocalDateTime date) {

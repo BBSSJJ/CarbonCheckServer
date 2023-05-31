@@ -2,20 +2,21 @@ package kr.co.carboncheck.spring.carboncheckserver.controller;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
 import kr.co.carboncheck.spring.carboncheckserver.domain.WaterUsage;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.usage.InsertElectricityUsageRequest;
 import kr.co.carboncheck.spring.carboncheckserver.dto.usage.InsertElectricityUsageResponse;
-import kr.co.carboncheck.spring.carboncheckserver.dto.usage.InsertWaterUsageRequest;
 import kr.co.carboncheck.spring.carboncheckserver.dto.usage.InsertWaterUsageResponse;
 import kr.co.carboncheck.spring.carboncheckserver.service.usage.UsageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static java.sql.Types.NULL;
 
@@ -33,7 +34,7 @@ public class UsageController {
     @PostMapping("/waterusage/insert")
     public ResponseEntity<InsertWaterUsageResponse> insertWaterUsage(@RequestBody List<WaterUsage> waterUsageList) {
         for (WaterUsage waterUsage : waterUsageList) {
-            if(waterUsage.getUserId() == NULL) continue;
+            if (waterUsage.getUserId() == NULL) continue;
             if (!waterUsageService.insertUsage(waterUsage))
                 return ResponseEntity.ok().body(new InsertWaterUsageResponse(false));
         }
@@ -48,6 +49,16 @@ public class UsageController {
         electricityUsage.setAmount(insertElectricityUsageRequest.getAmount());
         electricityUsage.setDate(LocalDateTime.now());
         return ResponseEntity.ok().body(new InsertElectricityUsageResponse(electricityUsageService.insertUsage(electricityUsage)));
+    }
+
+    @GetMapping("/waterusage/user")
+    public ResponseEntity<GetUsageResponse> getUserWaterUsage(@RequestParam("userId") String userId) {
+        return ResponseEntity.ok().body(waterUsageService.getTodayUserUsage(userId));
+    }
+
+    @GetMapping("/waterusage/group")
+    public ResponseEntity<GetUsageResponse> getGroupWaterUsage(@RequestParam("homeServerId") String homeServerId) {
+        return ResponseEntity.ok().body(waterUsageService.getTodayGroupUsage(homeServerId));
     }
 
 

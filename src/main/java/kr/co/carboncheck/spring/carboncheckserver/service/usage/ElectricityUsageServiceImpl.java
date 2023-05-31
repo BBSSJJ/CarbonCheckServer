@@ -1,15 +1,16 @@
 package kr.co.carboncheck.spring.carboncheckserver.service.usage;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
 import kr.co.carboncheck.spring.carboncheckserver.repository.device.PlugRepository;
 import kr.co.carboncheck.spring.carboncheckserver.repository.usage.UsageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service
@@ -48,6 +49,16 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
             usageRepository.updateUsage(pre_usage);
         }
         return true;
+    }
+
+    @Override
+    public GetUsageResponse getTodayUserUsage(String userId) {
+        return null;
+    }
+
+    @Override
+    public GetUsageResponse getTodayGroupUsage(String homeServerId) {
+        return null;
     }
 
 
