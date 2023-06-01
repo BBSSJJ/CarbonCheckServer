@@ -2,6 +2,7 @@ package kr.co.carboncheck.spring.carboncheckserver.repository.user;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -12,4 +13,6 @@ public interface UserRepository {
     Optional<User> findByUserId(Long userId);
 
     Optional<User> findByEmail(String email);
+
+    Map<String, Integer> findGroupTargetAmount(String homeServerId);
 }
