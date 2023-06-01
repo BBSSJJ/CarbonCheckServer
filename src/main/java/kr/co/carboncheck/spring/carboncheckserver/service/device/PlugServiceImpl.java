@@ -23,7 +23,8 @@ public class PlugServiceImpl implements PlugService {
         if (plugRepository.findByPlugId(plugId).isPresent()) {
             return new RegisterPlugResponse(false, "이미 등록된 플러그입니다.");
         } else {
-            Plug plug = new Plug(plugId, userId);
+            int userIdInt = Integer.parseInt(userId);
+            Plug plug = new Plug(plugId, userIdInt);
             if (plugRepository.savePlug(plug)) {
                 return new RegisterPlugResponse(true, "플러그가 등록되었습니다.");
             } else {

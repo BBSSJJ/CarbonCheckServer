@@ -61,5 +61,15 @@ public class UsageController {
         return ResponseEntity.ok().body(waterUsageService.getTodayGroupUsage(homeServerId));
     }
 
+    @GetMapping("/electricityusage/user")
+    public ResponseEntity<GetUsageResponse> getUserElectricityUsage(@RequestParam("userId") String userId) {
+        return ResponseEntity.ok().body(waterUsageService.getTodayUserUsage(userId));
+    }
+
+    @GetMapping("/electricityusage/group")
+    public ResponseEntity<GetUsageResponse> getGroupElectricityUsage(@RequestParam("homeServerId") String homeServerId) {
+        return ResponseEntity.ok().body(waterUsageService.getTodayGroupUsage(homeServerId));
+    }
+
 
 }
