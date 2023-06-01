@@ -7,7 +7,8 @@ public class InsertElectricityUsageRequest {
     @JsonProperty("plug_id")
     private String plugId;
 
-    private int amount;
+    @JsonProperty("cumulative_amount")
+    private int cumulativeAmount;
 
     public String getPlugId() {
         return plugId;
@@ -17,11 +18,11 @@ public class InsertElectricityUsageRequest {
         this.plugId = plugId;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getCumulativeAmount() {
+        return cumulativeAmount;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setCumulativeAmount(int cumulativeAmount) {
+        this.cumulativeAmount = cumulativeAmount;
     }
 }

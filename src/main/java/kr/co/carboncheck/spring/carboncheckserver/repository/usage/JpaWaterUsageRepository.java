@@ -27,50 +27,44 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
 
     @Override
     public Map<String, Float> findTodayUserUsage(String userId) {
+        System.out.println("find TodayUserUsage");
         int userIdInt = Integer.parseInt(userId);
-        int year = LocalDateTime.now().getYear();
-        int month = LocalDateTime.now().getMonthValue();
-        int day = LocalDateTime.now().getDayOfMonth();
+
         List<Object[]> results = em.createQuery("select w.place, SUM(w.amount) from WaterUsage w " +
-                        "where w.userId =: userId " +
-                        "and YEAR(w.endTime) =: year " +
-                        "and MONTH(w.endTime) =: month " +
-                        "and DAY(w.endTime) =: day " +
+                        "where w.userId = :userId " +
+                        "and DATE(w.endTime) = CURDATE() " +
                         "GROUP BY w.place", Object[].class)
                 .setParameter("userId", userIdInt)
-                .setParameter("year", year)
-                .setParameter("month", month)
-                .setParameter("day", day).getResultList();
+                .getResultList();
         Map<String, Float> map = new HashMap<>();
+
+        //TODO: 사용한 place만 뜨기 때문에 문제가 있다...
+        //TODO: 원래는 DOUBLE형이어야 한다!!!!!!!
         for (Object[] result : results) {
-            String place = (String) result[0];
-            Float amount = (result[1] == null) ? 0f : (Float) result[1];
-            map.put(place, amount);
-            //TODO: 사용한 place만 뜨기 때문에 문제가 있다...
+            String name = (String) result[0];
+            Float amount = (result[1] == null) ? 0f : ((Double) result[1]).floatValue();
+            map.put(name, amount);
         }
         return map;
     }
 
     @Override
     public Map<String, Float> findTodayGroupUsage(String homeServerId) {
-        int year = LocalDateTime.now().getYear();
-        int month = LocalDateTime.now().getMonthValue();
-        int day = LocalDateTime.now().getDayOfMonth();
+        System.out.println("in findTodayGroupUsage");
+
         List<Object[]> results = em.createQuery("select u.name, SUM(w.amount) " +
                         "from User u left join WaterUsage w " +
-                        "where u.homeServerId =: homeServerId " +
-                        "and YEAR(w.endTime) =: year " +
-                        "and MONTH(w.endTime) =: month " +
-                        "and DAY(w.endTime) =: day " +
-                        "GROUP BY w.place", Object[].class)
+                        "on u.userId = w.userId " +
+                        "where u.homeServerId = :homeServerId " +
+                        "and DATE(w.endTime) = CURDATE() " +
+                        "group by u.name", Object[].class)
                 .setParameter("homeServerId", homeServerId)
-                .setParameter("year", year)
-                .setParameter("month", month)
-                .setParameter("day", day).getResultList();
+                .getResultList();
         Map<String, Float> map = new HashMap<>();
+        //TODO: 원래는 DOUBLE형이어야 한다!!!!!!!
         for (Object[] result : results) {
             String name = (String) result[0];
-            Float amount = (result[1] == null) ? 0f : (Float) result[1];
+            Float amount = (result[1] == null) ? 0f : ((Double) result[1]).floatValue();
             map.put(name, amount);
         }
         return map;
@@ -80,13 +74,14 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
     //No Use
     @Override
     public Optional<ElectricityUsage> findTodayUsageByPlugId(String plugId) {
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public int findSumByPlugId(String plugId) {
-        return 0;
+    public Optional<ElectricityUsage> findBeforeUsageByPlugId(String plugId) {
+        return Optional.empty();
     }
+
 
     @Override
     public boolean updateUsage(WaterUsage usage) {

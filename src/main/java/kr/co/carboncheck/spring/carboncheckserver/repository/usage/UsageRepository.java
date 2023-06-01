@@ -16,5 +16,6 @@ public interface UsageRepository<T> {
 
     Optional<ElectricityUsage> findTodayUsageByPlugId(String plugId);
 
-    int findSumByPlugId(String plugId);
+    Optional<ElectricityUsage> findBeforeUsageByPlugId(String plugId);
+
 }
