@@ -1,6 +1,7 @@
 package kr.co.carboncheck.spring.carboncheckserver.service.user;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
+import kr.co.carboncheck.spring.carboncheckserver.dto.user.GetGroupTargetAmountResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.JoinResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.LoginResponse;
 import kr.co.carboncheck.spring.carboncheckserver.repository.user.UserRepository;
@@ -59,6 +60,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public GetGroupTargetAmountResponse getGroupTargetAmount(String homeServerId) {
+        return new GetGroupTargetAmountResponse(userRepository.findGroupTargetAmount(homeServerId));
     }
 
 }

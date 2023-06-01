@@ -1,6 +1,7 @@
 package kr.co.carboncheck.spring.carboncheckserver.controller;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.*;
 import kr.co.carboncheck.spring.carboncheckserver.service.user.UserService;
 import kr.co.carboncheck.spring.carboncheckserver.sse.SseGroup;
@@ -42,6 +43,7 @@ public class UserController {
         user.setPassword(hashedPassword);
         user.setName(joinRequest.getName());
         user.setAuthType(joinRequest.getAuthType());
+        user.setTargetAmount(1000); //default
 
         return ResponseEntity.ok().body(userService.createUser(user));
     }
@@ -133,5 +135,10 @@ public class UserController {
 
         }
         return ResponseEntity.ok().body(false);
+    }
+
+    @GetMapping("/target_amount/group")
+    public ResponseEntity<GetGroupTargetAmountResponse> getGroupTargetAmount(@RequestParam("homeServerId") String homeServerId) {
+        return ResponseEntity.ok().body(userService.getGroupTargetAmount(homeServerId));
     }
 }
