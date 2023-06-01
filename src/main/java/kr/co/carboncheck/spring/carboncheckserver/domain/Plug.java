@@ -11,9 +11,9 @@ public class Plug {
     String plugId;
 
     @Column(name = "user_id")
-    String userId;
+    int userId;
 
-    public Plug(String plugId, String userId) {
+    public Plug(String plugId, int userId) {
         this.plugId = plugId;
         this.userId = userId;
     }
@@ -29,11 +29,11 @@ public class Plug {
         this.plugId = plugId;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 }

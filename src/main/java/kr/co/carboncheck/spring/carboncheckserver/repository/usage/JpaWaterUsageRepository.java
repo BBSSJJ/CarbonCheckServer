@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
@@ -46,7 +44,7 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
         Map<String, Float> map = new HashMap<>();
         for (Object[] result : results) {
             String place = (String) result[0];
-            float amount = (result[1] == null) ? 0f : (float) result[1];
+            Float amount = (result[1] == null) ? 0f : (Float) result[1];
             map.put(place, amount);
             //TODO: 사용한 place만 뜨기 때문에 문제가 있다...
         }
@@ -72,7 +70,7 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
         Map<String, Float> map = new HashMap<>();
         for (Object[] result : results) {
             String name = (String) result[0];
-            float amount = (result[1] == null) ? 0f : (float) result[1];
+            Float amount = (result[1] == null) ? 0f : (Float) result[1];
             map.put(name, amount);
         }
         return map;
@@ -81,8 +79,13 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
 
     //No Use
     @Override
-    public List<ElectricityUsage> findByPlugIdAndDate(String plugId, LocalDateTime date) {
+    public Optional<ElectricityUsage> findTodayUsageByPlugId(String plugId) {
         return null;
+    }
+
+    @Override
+    public int findSumByPlugId(String plugId) {
+        return 0;
     }
 
     @Override
