@@ -17,6 +17,17 @@ public class ElectricityUsage {
 
     private int amount;
 
+    @Column(name = "cumulative_amount")
+    private int cumulativeAmount;
+
+    public int getCumulativeAmount() {
+        return cumulativeAmount;
+    }
+
+    public void setCumulativeAmount(int cumulativeAmount) {
+        this.cumulativeAmount = cumulativeAmount;
+    }
+
     public int getElectricityUsageId() {
         return electricityUsageId;
     }

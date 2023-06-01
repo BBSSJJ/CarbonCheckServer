@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Transactional
@@ -26,49 +25,58 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
 
     @Override
     public boolean insertUsage(ElectricityUsage usage) {
+
         //TODO 전기사용량은 지금 날짜로 등록된거 가져와서 수정한 뒤 넣어야 함!!!
         String plugId = usage.getPlugId();
-        LocalDateTime date = usage.getDate();
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-        Optional<ElectricityUsage> optionalUsage = usageRepository.findTodayUsageByPlugId(plugId);
 
+        Optional<ElectricityUsage> optionalTodayUsage = usageRepository.findTodayUsageByPlugId(plugId);
+        Optional<ElectricityUsage> optionalBeforeUsage = usageRepository.findBeforeUsageByPlugId(plugId);
+
+        //유효한 플러그가 아닐 경우
         if (!plugRepository.findByPlugId(usage.getPlugId()).isPresent()) {
             System.out.println("등록되지 않은 플러그");
             return false;
         }
 
-        //오늘이 1일인 경우
-        if (date.getDayOfMonth() == 1) {
-            //그냥 넣으면 됨. 대신 오늘 등록된 값 있으면 업데이트
-            if (!optionalUsage.isPresent()) {
+        // 이 전에 등록된 기록이 없을 경우
+        if(!optionalBeforeUsage.isPresent()){
+            //오늘 기록된 데이터가 하나도 없을 경우에는 그냥 삽입
+            if(!optionalTodayUsage.isPresent()) {
+                usage.setAmount(usage.getCumulativeAmount());
                 usageRepository.insert(usage);
-            } else {
-                ElectricityUsage pre_usage = optionalUsage.get();
-                pre_usage.setDate(usage.getDate());
-                pre_usage.setAmount(usage.getAmount());
-                usageRepository.updateUsage(pre_usage);
             }
-            return true;
+            //오늘 기록된 데이터가 있을 경우, 업데이트하여 삽입
+            else{
+                ElectricityUsage todayUsage = optionalTodayUsage.get();
+                todayUsage.setAmount(usage.getCumulativeAmount());
+                todayUsage.setCumulativeAmount(usage.getCumulativeAmount());
+                todayUsage.setDate(usage.getDate());
+                usageRepository.updateUsage(todayUsage);
+            }
         }
-
-        //오늘이 1일이 아닌 경우
-        //이전 사용량의 합 가져와서 뺀 후 넣는다.
-        int beforeUsage = usageRepository.findSumByPlugId(plugId);
-
-        if (!optionalUsage.isPresent()) {
-            usage.setAmount(usage.getAmount() - beforeUsage);
-            usageRepository.insert(usage);
-        } else {
-            ElectricityUsage pre_usage = optionalUsage.get();
-            pre_usage.setDate(usage.getDate());
-            pre_usage.setAmount(usage.getAmount() - beforeUsage);
-            usageRepository.updateUsage(pre_usage);
+        // 이 전에 등록된 기록이 있을 경우
+        else{
+            //오늘 기록된 데이터가 하나도 없을 경우에는 그냥 삽입
+            ElectricityUsage beforeUsage = optionalBeforeUsage.get();
+            if(!optionalTodayUsage.isPresent()){
+                usage.setAmount(usage.getCumulativeAmount() - beforeUsage.getCumulativeAmount());
+                usageRepository.insert(usage);
+            }
+            //오늘 기록된 데이터가 있을 경우, 업데이트하여 삽입
+            else{
+                ElectricityUsage todayUsage = optionalTodayUsage.get();
+                todayUsage.setAmount(usage.getCumulativeAmount() - beforeUsage.getCumulativeAmount());
+                todayUsage.setCumulativeAmount(usage.getCumulativeAmount());
+                todayUsage.setDate(usage.getDate());
+                usageRepository.updateUsage(todayUsage);
+            }
         }
         return true;
     }
 
     @Override
     public GetUsageResponse getTodayUserUsage(String userId) {
+        System.out.println("in getTodayUserUsage");
         GetUsageResponse userUsage = new GetUsageResponse(usageRepository.findTodayUserUsage(userId));
         return userUsage;
     }

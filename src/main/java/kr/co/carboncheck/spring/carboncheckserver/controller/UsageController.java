@@ -46,7 +46,7 @@ public class UsageController {
     public ResponseEntity<InsertElectricityUsageResponse> insertElectricityUsage(@RequestBody InsertElectricityUsageRequest insertElectricityUsageRequest) {
         ElectricityUsage electricityUsage = new ElectricityUsage();
         electricityUsage.setPlugId(insertElectricityUsageRequest.getPlugId());
-        electricityUsage.setAmount(insertElectricityUsageRequest.getAmount());
+        electricityUsage.setCumulativeAmount(insertElectricityUsageRequest.getCumulativeAmount());
         electricityUsage.setDate(LocalDateTime.now());
         return ResponseEntity.ok().body(new InsertElectricityUsageResponse(electricityUsageService.insertUsage(electricityUsage)));
     }
@@ -63,12 +63,14 @@ public class UsageController {
 
     @GetMapping("/electricityusage/user")
     public ResponseEntity<GetUsageResponse> getUserElectricityUsage(@RequestParam("userId") String userId) {
-        return ResponseEntity.ok().body(waterUsageService.getTodayUserUsage(userId));
+        System.out.println("유저 전기사용량 요청");
+        System.out.println("userId = " + userId);
+        return ResponseEntity.ok().body(electricityUsageService.getTodayUserUsage(userId));
     }
 
     @GetMapping("/electricityusage/group")
     public ResponseEntity<GetUsageResponse> getGroupElectricityUsage(@RequestParam("homeServerId") String homeServerId) {
-        return ResponseEntity.ok().body(waterUsageService.getTodayGroupUsage(homeServerId));
+        return ResponseEntity.ok().body(electricityUsageService.getTodayGroupUsage(homeServerId));
     }
 
 
