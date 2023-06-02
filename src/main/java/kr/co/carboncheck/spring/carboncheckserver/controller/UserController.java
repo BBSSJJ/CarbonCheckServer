@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static java.sql.Types.NULL;
@@ -138,7 +139,7 @@ public class UserController {
     }
 
     @GetMapping("/target_amount/group")
-    public ResponseEntity<GetGroupTargetAmountResponse> getGroupTargetAmount(@RequestParam("homeServerId") String homeServerId) {
+    public ResponseEntity<List<GetGroupTargetAmountResponse>> getGroupTargetAmount(@RequestParam("homeServerId") String homeServerId) {
         return ResponseEntity.ok().body(userService.getGroupTargetAmount(homeServerId));
     }
 }

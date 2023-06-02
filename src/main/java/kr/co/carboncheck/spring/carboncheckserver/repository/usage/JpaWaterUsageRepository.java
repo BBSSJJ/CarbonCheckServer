@@ -2,6 +2,7 @@ package kr.co.carboncheck.spring.carboncheckserver.repository.usage;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
 import kr.co.carboncheck.spring.carboncheckserver.domain.WaterUsage;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +27,7 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
     }
 
     @Override
-    public Map<String, Float> findTodayUserUsage(String userId) {
+    public List<GetUsageResponse> findTodayUserUsage(String userId) {
         System.out.println("find TodayUserUsage");
         int userIdInt = Integer.parseInt(userId);
 
@@ -36,38 +37,36 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
                         "GROUP BY w.place", Object[].class)
                 .setParameter("userId", userIdInt)
                 .getResultList();
-        Map<String, Float> map = new HashMap<>();
-
-        //TODO: 사용한 place만 뜨기 때문에 문제가 있다...
+        List<GetUsageResponse> list = new ArrayList<>();
         //TODO: 원래는 DOUBLE형이어야 한다!!!!!!!
         for (Object[] result : results) {
-            String name = (String) result[0];
-            Float amount = (result[1] == null) ? 0f : ((Double) result[1]).floatValue();
-            map.put(name, amount);
+            String place = (String) result[0];
+            float amount = (result[1] == null) ? 0f : ((Double) result[1]).floatValue();
+            list.add(new GetUsageResponse(place, amount));
         }
-        return map;
+        return list;
     }
 
     @Override
-    public Map<String, Float> findTodayGroupUsage(String homeServerId) {
+    public List<GetUsageResponse> findTodayGroupUsage(String homeServerId) {
         System.out.println("in findTodayGroupUsage");
 
         List<Object[]> results = em.createQuery("select u.name, SUM(w.amount) " +
                         "from User u left join WaterUsage w " +
                         "on u.userId = w.userId " +
-                        "where u.homeServerId = :homeServerId " +
                         "and DATE(w.endTime) = CURDATE() " +
+                        "where u.homeServerId = :homeServerId " +
                         "group by u.name", Object[].class)
                 .setParameter("homeServerId", homeServerId)
                 .getResultList();
-        Map<String, Float> map = new HashMap<>();
+        List<GetUsageResponse> list = new ArrayList<>();
         //TODO: 원래는 DOUBLE형이어야 한다!!!!!!!
         for (Object[] result : results) {
             String name = (String) result[0];
-            Float amount = (result[1] == null) ? 0f : ((Double) result[1]).floatValue();
-            map.put(name, amount);
+            float amount = (result[1] == null) ? 0f : ((Double) result[1]).floatValue();
+            list.add(new GetUsageResponse(name, amount));
         }
-        return map;
+        return list;
     }
 
 

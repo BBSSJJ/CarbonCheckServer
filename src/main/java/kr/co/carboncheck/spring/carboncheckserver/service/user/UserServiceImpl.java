@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -63,8 +64,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetGroupTargetAmountResponse getGroupTargetAmount(String homeServerId) {
-        return new GetGroupTargetAmountResponse(userRepository.findGroupTargetAmount(homeServerId));
+    public List<GetGroupTargetAmountResponse> getGroupTargetAmount(String homeServerId) {
+        return userRepository.findGroupTargetAmount(homeServerId);
     }
 
 }

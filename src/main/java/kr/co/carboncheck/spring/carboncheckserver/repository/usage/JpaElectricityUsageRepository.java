@@ -1,14 +1,12 @@
 package kr.co.carboncheck.spring.carboncheckserver.repository.usage;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class JpaElectricityUsageRepository implements UsageRepository<ElectricityUsage> {
@@ -32,29 +30,29 @@ public class JpaElectricityUsageRepository implements UsageRepository<Electricit
         return true;
     }
 
-    public Map<String, Float> findTodayUserUsage(String userId) {
+    public List<GetUsageResponse> findTodayUserUsage(String userId) {
         System.out.println("in findTodayUserUsage");
         int userIdInt = Integer.parseInt(userId);
+        //and 절이 where아래로 가면 사용량이 없는경우엔 안나오고 where절 위로 가면 사용량이 없는 경우에도 나온다.
         List<Object[]> results = em.createQuery("select p.plugId, COALESCE(SUM(e.amount), 0) " +
-                        "from User u join Plug p on u.userId = p.userId " +
+                        "from User u left join Plug p on u.userId = p.userId " +
                         "left join ElectricityUsage e on p.plugId = e.plugId " +
-                        "where u.userId = :userId " +
                         "and DATE(e.date) = CURDATE()" +
+                        "where u.userId = :userId " +
                         "group by p.plugId", Object[].class)
                 .setParameter("userId", userIdInt)
                 .getResultList();
-        Map<String, Float> map = new HashMap<>();
-        //TODO: 원래는 Long 타입이어야 한다!!!!
+        List<GetUsageResponse> list = new ArrayList<>();
+        //TODO: 원래는 Long타입어어야 한다!!!!!!!
         for (Object[] result : results) {
             String plugId = (String) result[0];
-            Number amount = (Number) result[1];
-            Float convertedAmount = amount.floatValue(); // 형변환
-            map.put(plugId, convertedAmount);
+            float amount = (result[1] == null) ? 0f : ((Long) result[1]).floatValue();
+            list.add(new GetUsageResponse(plugId, amount));
         }
-        return map;
+        return list;
     }
 
-    public Map<String, Float> findTodayGroupUsage(String homeServerId) {
+    public List<GetUsageResponse> findTodayGroupUsage(String homeServerId) {
 //        SELECT u.name, COALESCE(SUM(e.amount), 0) AS total_usage
 //        FROM user u
 //        LEFT JOIN plug p ON u.user_id = p.user_id
@@ -70,15 +68,14 @@ public class JpaElectricityUsageRepository implements UsageRepository<Electricit
                         "group by u.userId", Object[].class)
                 .setParameter("homeServerId", homeServerId)
                 .getResultList();
-        Map<String, Float> map = new HashMap<>();
-        //TODO: 원래는 Long 타입이어야 한다!!!!
+        List<GetUsageResponse> list = new ArrayList<>();
+        //TODO: 원래는 Long타입어어야 한다!!!!!!!
         for (Object[] result : results) {
             String name = (String) result[0];
-            Number amount = (Number) result[1];
-            Float convertedAmount = amount.floatValue(); // 형변환
-            map.put(name, convertedAmount);
+            float amount = (result[1] == null) ? 0f : ((Long) result[1]).floatValue();
+            list.add(new GetUsageResponse(name, amount));
         }
-        return map;
+        return list;
     }
 
     @Override

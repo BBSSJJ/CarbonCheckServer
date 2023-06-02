@@ -1,7 +1,10 @@
 package kr.co.carboncheck.spring.carboncheckserver.repository.user;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
+import kr.co.carboncheck.spring.carboncheckserver.dto.user.GetGroupTargetAmountResponse;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,5 +17,5 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email);
 
-    Map<String, Integer> findGroupTargetAmount(String homeServerId);
+    List<GetGroupTargetAmountResponse> findGroupTargetAmount(String homeServerId);
 }
