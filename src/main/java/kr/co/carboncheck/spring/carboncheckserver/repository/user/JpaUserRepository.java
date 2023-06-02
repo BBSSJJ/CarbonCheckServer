@@ -1,14 +1,13 @@
 package kr.co.carboncheck.spring.carboncheckserver.repository.user;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
+import kr.co.carboncheck.spring.carboncheckserver.dto.user.GetGroupTargetAmountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class JpaUserRepository implements UserRepository {
@@ -48,19 +47,20 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public Map<String, Integer> findGroupTargetAmount(String homeServerId) {
+    public List<GetGroupTargetAmountResponse> findGroupTargetAmount(String homeServerId) {
         List<Object[]> results = em.createQuery("select u.name, u.targetAmount " +
                 "from User u " +
                 "where u.homeServerId = :homeServerId ", Object[].class)
                 .setParameter("homeServerId", homeServerId)
                 .getResultList();
-        Map<String, Integer> map = new HashMap<>();
-        //TODO: 원래는 Long 타입이어야 한다!!!!
+        List<GetGroupTargetAmountResponse> list = new ArrayList<>();
+        //TODO: 원래는 Long타입어어야 한다!!!!!!!
         for (Object[] result : results) {
             String name = (String) result[0];
-            Integer amount = (Integer) result[1];
-            map.put(name, amount);
+            int targetAmount = (result[1] == null) ? 0 : (int) result[1];
+            list.add(new GetGroupTargetAmountResponse(name, targetAmount));
+            System.out.println(targetAmount);
         }
-        return map;
+        return list;
     }
 }

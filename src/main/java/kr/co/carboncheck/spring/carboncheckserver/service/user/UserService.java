@@ -5,6 +5,7 @@ import kr.co.carboncheck.spring.carboncheckserver.dto.user.GetGroupTargetAmountR
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.JoinResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.LoginResponse;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -14,6 +15,6 @@ public interface UserService {
 
     Optional<User> getUserByEmail(String email);
 
-    GetGroupTargetAmountResponse getGroupTargetAmount(String homeServerId);
+    List<GetGroupTargetAmountResponse> getGroupTargetAmount(String homeServerId);
 
 }

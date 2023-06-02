@@ -52,24 +52,24 @@ public class UsageController {
     }
 
     @GetMapping("/waterusage/user")
-    public ResponseEntity<GetUsageResponse> getUserWaterUsage(@RequestParam("userId") String userId) {
+    public ResponseEntity<List<GetUsageResponse>> getUserWaterUsage(@RequestParam("userId") String userId) {
         return ResponseEntity.ok().body(waterUsageService.getTodayUserUsage(userId));
     }
 
     @GetMapping("/waterusage/group")
-    public ResponseEntity<GetUsageResponse> getGroupWaterUsage(@RequestParam("homeServerId") String homeServerId) {
+    public ResponseEntity<List<GetUsageResponse>> getGroupWaterUsage(@RequestParam("homeServerId") String homeServerId) {
         return ResponseEntity.ok().body(waterUsageService.getTodayGroupUsage(homeServerId));
     }
 
     @GetMapping("/electricityusage/user")
-    public ResponseEntity<GetUsageResponse> getUserElectricityUsage(@RequestParam("userId") String userId) {
+    public ResponseEntity<List<GetUsageResponse>> getUserElectricityUsage(@RequestParam("userId") String userId) {
         System.out.println("유저 전기사용량 요청");
         System.out.println("userId = " + userId);
         return ResponseEntity.ok().body(electricityUsageService.getTodayUserUsage(userId));
     }
 
     @GetMapping("/electricityusage/group")
-    public ResponseEntity<GetUsageResponse> getGroupElectricityUsage(@RequestParam("homeServerId") String homeServerId) {
+    public ResponseEntity<List<GetUsageResponse>> getGroupElectricityUsage(@RequestParam("homeServerId") String homeServerId) {
         return ResponseEntity.ok().body(electricityUsageService.getTodayGroupUsage(homeServerId));
     }
 

@@ -1,7 +1,9 @@
 package kr.co.carboncheck.spring.carboncheckserver.repository.usage;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.ElectricityUsage;
+import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -10,9 +12,9 @@ public interface UsageRepository<T> {
 
     public boolean updateUsage(T usage);
 
-    Map<String, Float> findTodayUserUsage(String userId);
+    List<GetUsageResponse> findTodayUserUsage(String userId);
 
-    Map<String, Float> findTodayGroupUsage(String homeServerId);
+    List<GetUsageResponse> findTodayGroupUsage(String homeServerId);
 
     Optional<ElectricityUsage> findTodayUsageByPlugId(String plugId);
 

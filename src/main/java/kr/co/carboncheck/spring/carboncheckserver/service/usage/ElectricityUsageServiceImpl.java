@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -39,14 +40,14 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
         }
 
         // 이 전에 등록된 기록이 없을 경우
-        if(!optionalBeforeUsage.isPresent()){
+        if (!optionalBeforeUsage.isPresent()) {
             //오늘 기록된 데이터가 하나도 없을 경우에는 그냥 삽입
-            if(!optionalTodayUsage.isPresent()) {
+            if (!optionalTodayUsage.isPresent()) {
                 usage.setAmount(usage.getCumulativeAmount());
                 usageRepository.insert(usage);
             }
             //오늘 기록된 데이터가 있을 경우, 업데이트하여 삽입
-            else{
+            else {
                 ElectricityUsage todayUsage = optionalTodayUsage.get();
                 todayUsage.setAmount(usage.getCumulativeAmount());
                 todayUsage.setCumulativeAmount(usage.getCumulativeAmount());
@@ -55,15 +56,15 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
             }
         }
         // 이 전에 등록된 기록이 있을 경우
-        else{
+        else {
             //오늘 기록된 데이터가 하나도 없을 경우에는 그냥 삽입
             ElectricityUsage beforeUsage = optionalBeforeUsage.get();
-            if(!optionalTodayUsage.isPresent()){
+            if (!optionalTodayUsage.isPresent()) {
                 usage.setAmount(usage.getCumulativeAmount() - beforeUsage.getCumulativeAmount());
                 usageRepository.insert(usage);
             }
             //오늘 기록된 데이터가 있을 경우, 업데이트하여 삽입
-            else{
+            else {
                 ElectricityUsage todayUsage = optionalTodayUsage.get();
                 todayUsage.setAmount(usage.getCumulativeAmount() - beforeUsage.getCumulativeAmount());
                 todayUsage.setCumulativeAmount(usage.getCumulativeAmount());
@@ -75,17 +76,13 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
     }
 
     @Override
-    public GetUsageResponse getTodayUserUsage(String userId) {
+    public List<GetUsageResponse> getTodayUserUsage(String userId) {
         System.out.println("in getTodayUserUsage");
-        GetUsageResponse userUsage = new GetUsageResponse(usageRepository.findTodayUserUsage(userId));
-        return userUsage;
+        return usageRepository.findTodayUserUsage(userId);
     }
 
     @Override
-    public GetUsageResponse getTodayGroupUsage(String homeServerId) {
-        GetUsageResponse groupUsage = new GetUsageResponse(usageRepository.findTodayGroupUsage(homeServerId));
-        return groupUsage;
+    public List<GetUsageResponse> getTodayGroupUsage(String homeServerId) {
+        return usageRepository.findTodayGroupUsage((homeServerId));
     }
-
-
 }

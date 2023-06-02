@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @Transactional
@@ -26,14 +28,12 @@ public class WaterUsageServiceImpl implements UsageService<WaterUsage> {
     }
 
     @Override
-    public GetUsageResponse getTodayUserUsage(String userId) {
-        GetUsageResponse userUsage = new GetUsageResponse(usageRepository.findTodayUserUsage(userId));
-        return userUsage;
+    public List<GetUsageResponse> getTodayUserUsage(String userId) {
+        return usageRepository.findTodayUserUsage(userId);
     }
 
     @Override
-    public GetUsageResponse getTodayGroupUsage(String homeServerId) {
-        GetUsageResponse groupUsage = new GetUsageResponse(usageRepository.findTodayGroupUsage(homeServerId));
-        return groupUsage;
+    public List<GetUsageResponse> getTodayGroupUsage(String homeServerId) {
+        return usageRepository.findTodayGroupUsage((homeServerId));
     }
 }

@@ -3,17 +3,27 @@ package kr.co.carboncheck.spring.carboncheckserver.dto.usage;
 import java.util.Map;
 
 public class GetUsageResponse {
-    Map<String, Float> usage;
+    private String str;
+    private float amount;
 
-    public GetUsageResponse(Map<String, Float> usage) {
-        this.usage = usage;
+    public GetUsageResponse(String str, float amount) {
+        this.str = str;
+        this.amount = amount;
     }
 
-    public Map<String, Float> getUsage() {
-        return usage;
+    public String getStr() {
+        return str;
     }
 
-    public void setUsage(Map<String, Float> usage) {
-        this.usage = usage;
+    public void setStr(String str) {
+        this.str = str;
+    }
+
+    public float getAmount() {
+        return amount;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
     }
 }

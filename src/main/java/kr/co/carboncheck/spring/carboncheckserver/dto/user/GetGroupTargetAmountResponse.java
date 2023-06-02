@@ -1,19 +1,28 @@
 package kr.co.carboncheck.spring.carboncheckserver.dto.user;
 
-import java.util.Map;
-
 public class GetGroupTargetAmountResponse {
-    Map<String, Integer> groupTargetAmount;
 
-    public GetGroupTargetAmountResponse(Map<String, Integer> groupTargetAmount) {
-        this.groupTargetAmount = groupTargetAmount;
+    private String name;
+    private int targetAmount;
+
+    public GetGroupTargetAmountResponse(String name, int targetAmount) {
+        this.name = name;
+        this.targetAmount = targetAmount;
     }
 
-    public Map<String, Integer> getGroupTargetAmount() {
-        return groupTargetAmount;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupTargetAmount(Map<String, Integer> groupTargetAmount) {
-        this.groupTargetAmount = groupTargetAmount;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getTargetAmount() {
+        return targetAmount;
+    }
+
+    public void setTargetAmount(int targetAmount) {
+        this.targetAmount = targetAmount;
     }
 }
