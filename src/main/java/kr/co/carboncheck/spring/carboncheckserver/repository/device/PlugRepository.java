@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface PlugRepository {
     boolean savePlug(Plug plug);
     Optional<Plug> findByPlugId(String plugId);
+
+    boolean deletePlugById(String plugId);
 }

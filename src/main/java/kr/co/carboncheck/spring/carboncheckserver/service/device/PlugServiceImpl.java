@@ -32,4 +32,9 @@ public class PlugServiceImpl implements PlugService {
             }
         }
     }
+
+    @Override
+    public Boolean removePlug(String plugId) {
+        return plugRepository.deletePlugById(plugId);
+    }
 }
