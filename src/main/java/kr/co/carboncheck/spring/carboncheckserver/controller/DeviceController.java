@@ -7,8 +7,10 @@ import kr.co.carboncheck.spring.carboncheckserver.service.device.PlugService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class DeviceController {
@@ -42,5 +44,10 @@ public class DeviceController {
         System.out.println("플러그 등록");
 
         return ResponseEntity.ok().body(plugService.registerPlug(registerPlugRequest.getPlugId(), registerPlugRequest.getUserId()));
+    }
+
+    @DeleteMapping("/plug/delete")
+    public ResponseEntity<Boolean> deletePlug(@RequestParam("plugId") String plugId){
+        return ResponseEntity.ok().body(plugService.removePlug(plugId));
     }
 }

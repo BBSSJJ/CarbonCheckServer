@@ -27,4 +27,12 @@ public class JpaPlugRepository implements PlugRepository {
         Plug plug = em.find(Plug.class, plugId);
         return Optional.ofNullable(plug);
     }
+
+    @Override
+    public boolean deletePlugById(String plugId) {
+        Optional<Plug> optionalPlug = findByPlugId(plugId);
+        if(!optionalPlug.isPresent()) return false;
+        else em.remove(optionalPlug.get());
+        return true;
+    }
 }

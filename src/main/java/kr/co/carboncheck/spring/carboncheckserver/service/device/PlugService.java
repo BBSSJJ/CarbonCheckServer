@@ -5,4 +5,6 @@ import kr.co.carboncheck.spring.carboncheckserver.dto.device.RegisterPlugRespons
 
 public interface PlugService {
     RegisterPlugResponse registerPlug(String plugId, String userId);
+
+    Boolean removePlug(String plugId);
 }
