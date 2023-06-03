@@ -42,6 +42,7 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
         for (Object[] result : results) {
             String place = (String) result[0];
             float amount = (result[1] == null) ? 0f : ((Double) result[1]).floatValue();
+            if(place == null) continue;
             list.add(new GetUsageResponse(place, amount));
         }
         return list;
@@ -64,6 +65,7 @@ public class JpaWaterUsageRepository implements UsageRepository<WaterUsage> {
         for (Object[] result : results) {
             String name = (String) result[0];
             float amount = (result[1] == null) ? 0f : ((Double) result[1]).floatValue();
+            if(name == null) continue;
             list.add(new GetUsageResponse(name, amount));
         }
         return list;

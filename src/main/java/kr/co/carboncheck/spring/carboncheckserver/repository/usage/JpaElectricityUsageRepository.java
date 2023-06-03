@@ -47,6 +47,7 @@ public class JpaElectricityUsageRepository implements UsageRepository<Electricit
         for (Object[] result : results) {
             String plugId = (String) result[0];
             float amount = (result[1] == null) ? 0f : ((Long) result[1]).floatValue();
+            if(plugId == null) continue;
             list.add(new GetUsageResponse(plugId, amount));
         }
         return list;
@@ -73,6 +74,7 @@ public class JpaElectricityUsageRepository implements UsageRepository<Electricit
         for (Object[] result : results) {
             String name = (String) result[0];
             float amount = (result[1] == null) ? 0f : ((Long) result[1]).floatValue();
+            if(name == null) continue;
             list.add(new GetUsageResponse(name, amount));
         }
         return list;
