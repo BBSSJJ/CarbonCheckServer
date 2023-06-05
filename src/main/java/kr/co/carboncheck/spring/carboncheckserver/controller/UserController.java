@@ -142,4 +142,11 @@ public class UserController {
     public ResponseEntity<List<GetGroupTargetAmountResponse>> getGroupTargetAmount(@RequestParam("homeServerId") String homeServerId) {
         return ResponseEntity.ok().body(userService.getGroupTargetAmount(homeServerId));
     }
+
+    @PostMapping("/target_amount/update")
+    public ResponseEntity<Boolean> updateUserTargetAmount(@RequestBody UpdateTargetAmountRequest updateTargetAmountRequest) {
+        int userId = Integer.parseInt(updateTargetAmountRequest.getUserId());
+        int targetAmount = updateTargetAmountRequest.getTargetAmount();
+        return ResponseEntity.ok().body(userService.updateUserTargetAmount(userId, targetAmount));
+    }
 }

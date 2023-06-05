@@ -68,4 +68,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findGroupTargetAmount(homeServerId);
     }
 
+    @Override
+    public boolean updateUserTargetAmount(int userId, int targetAmount){
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setTargetAmount(targetAmount);
+            userRepository.updateTargetAmount(user);
+            return true;
+        }
+        return false;
+    }
+
 }

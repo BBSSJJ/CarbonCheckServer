@@ -1,7 +1,6 @@
 package kr.co.carboncheck.spring.carboncheckserver.repository.user;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.User;
-import kr.co.carboncheck.spring.carboncheckserver.dto.usage.GetUsageResponse;
 import kr.co.carboncheck.spring.carboncheckserver.dto.user.GetGroupTargetAmountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,7 +32,7 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByUserId(Long userId) {
+    public Optional<User> findByUserId(int userId) {
         User user = em.find(User.class, userId);
         return Optional.ofNullable(user);
     }
@@ -62,5 +61,11 @@ public class JpaUserRepository implements UserRepository {
             System.out.println(targetAmount);
         }
         return list;
+    }
+
+    @Override
+    public boolean updateTargetAmount(User user) {
+        em.merge(user);
+        return true;
     }
 }

@@ -17,4 +17,5 @@ public interface UserService {
 
     List<GetGroupTargetAmountResponse> getGroupTargetAmount(String homeServerId);
 
+    boolean updateUserTargetAmount(int userId, int targetAmount);
 }
