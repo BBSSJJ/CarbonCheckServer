@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -22,9 +23,9 @@ public class WaterUsageServiceImpl implements UsageService<WaterUsage> {
     }
 
     @Override
-    public boolean insertUsage(WaterUsage usage) {
+    public Optional<WaterUsage> insertUsage(WaterUsage usage) {
         usageRepository.insert(usage);
-        return true;
+        return Optional.ofNullable(usage);
     }
 
     @Override
