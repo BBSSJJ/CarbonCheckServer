@@ -25,7 +25,7 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
     }
 
     @Override
-    public boolean insertUsage(ElectricityUsage usage) {
+    public Optional<ElectricityUsage> insertUsage(ElectricityUsage usage) {
 
         //TODO 전기사용량은 지금 날짜로 등록된거 가져와서 수정한 뒤 넣어야 함!!!
         String plugId = usage.getPlugId();
@@ -36,7 +36,7 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
         //유효한 플러그가 아닐 경우
         if (!plugRepository.findByPlugId(usage.getPlugId()).isPresent()) {
             System.out.println("등록되지 않은 플러그");
-            return false;
+            return Optional.empty();
         }
 
         // 이 전에 등록된 기록이 없을 경우
@@ -45,6 +45,7 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
             if (!optionalTodayUsage.isPresent()) {
                 usage.setAmount(usage.getCumulativeAmount());
                 usageRepository.insert(usage);
+                return Optional.ofNullable(usage);
             }
             //오늘 기록된 데이터가 있을 경우, 업데이트하여 삽입
             else {
@@ -53,6 +54,7 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
                 todayUsage.setCumulativeAmount(usage.getCumulativeAmount());
                 todayUsage.setDate(usage.getDate());
                 usageRepository.updateUsage(todayUsage);
+                return Optional.ofNullable(todayUsage);
             }
         }
         // 이 전에 등록된 기록이 있을 경우
@@ -62,6 +64,7 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
             if (!optionalTodayUsage.isPresent()) {
                 usage.setAmount(usage.getCumulativeAmount() - beforeUsage.getCumulativeAmount());
                 usageRepository.insert(usage);
+                return Optional.ofNullable(usage);
             }
             //오늘 기록된 데이터가 있을 경우, 업데이트하여 삽입
             else {
@@ -70,9 +73,9 @@ public class ElectricityUsageServiceImpl implements UsageService<ElectricityUsag
                 todayUsage.setCumulativeAmount(usage.getCumulativeAmount());
                 todayUsage.setDate(usage.getDate());
                 usageRepository.updateUsage(todayUsage);
+                return Optional.ofNullable(todayUsage);
             }
         }
-        return true;
     }
 
     @Override

@@ -1,20 +1,26 @@
 package kr.co.carboncheck.spring.carboncheckserver.service.device;
 
 import kr.co.carboncheck.spring.carboncheckserver.domain.Plug;
+import kr.co.carboncheck.spring.carboncheckserver.domain.User;
 import kr.co.carboncheck.spring.carboncheckserver.dto.device.RegisterPlugResponse;
 import kr.co.carboncheck.spring.carboncheckserver.repository.device.PlugRepository;
+import kr.co.carboncheck.spring.carboncheckserver.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Transactional
 @Service
 public class PlugServiceImpl implements PlugService {
     private PlugRepository plugRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public PlugServiceImpl(PlugRepository plugRepository) {
+    public PlugServiceImpl(PlugRepository plugRepository, UserRepository userRepository) {
         this.plugRepository = plugRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -31,6 +37,15 @@ public class PlugServiceImpl implements PlugService {
                 return new RegisterPlugResponse(false, "플러그가 등록에 실패하였습니다.");
             }
         }
+    }
+
+    @Override
+    public Optional<User> findUserByPlugId(String plugId) {
+        Optional<Plug> plugOptional = plugRepository.findByPlugId(plugId);
+        if (!plugOptional.isPresent()) return Optional.ofNullable(null);
+        Plug plug = plugOptional.get();
+
+        return userRepository.findByUserId(plug.getUserId());
     }
 
     @Override
