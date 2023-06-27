@@ -64,6 +64,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getUserById(int userId) {
+        return userRepository.findByUserId(userId);
+    }
+
+    @Override
     public List<GetGroupTargetAmountResponse> getGroupTargetAmount(String homeServerId) {
         return userRepository.findGroupTargetAmount(homeServerId);
     }

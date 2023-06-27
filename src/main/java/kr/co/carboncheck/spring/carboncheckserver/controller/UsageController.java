@@ -54,7 +54,32 @@ public class UsageController {
         }
         //클라이언트에게 보내야 함
 
-        return ResponseEntity.ok().body(new InsertWaterUsageResponse(true));
+        String userId = String.valueOf(waterUsageList.get(0).getUserId());
+        Optional<User> userOptional = userService.getUserById(Integer.parseInt(userId));
+        if (!userOptional.isPresent()) return ResponseEntity.ok().body(new InsertWaterUsageResponse(false));
+        String homeServerId = userOptional.get().getHomeServerId();
+
+        //업데이트된 사용량 가져온다
+        List<GetUsageResponse> insertedUsage = waterUsageService.getTodayUserUsage(userId);
+
+        //SSE group에서 해당 userId를 찾아 보내준다
+        SseGroup sseGroup = sseGroupManager.findGroup(homeServerId);
+        if (sseGroup != null) {
+            Subscriber subscriber = sseGroup.findSubscriber(userId);
+            if (subscriber != null) {
+                try {
+                    SseEmitter emitter = subscriber.getEmitter();
+                    for (GetUsageResponse waterUsage : insertedUsage) {
+                        emitter.send(SseEmitter.event().id("update_usage").name("water_usage").data(String.format("{\"place\": \"%s\", \"amount\": \"%f\"}", waterUsage.getStr(), waterUsage.getAmount())));
+                    }
+                    return ResponseEntity.ok().body(new InsertWaterUsageResponse(true));
+                } catch (IOException e) {
+                    return ResponseEntity.ok().body(new InsertWaterUsageResponse(false));
+                }
+            }
+        }
+
+        return ResponseEntity.ok().body(new InsertWaterUsageResponse(false));
 
     }
 
@@ -79,6 +104,8 @@ public class UsageController {
         String homeServerId = user.getHomeServerId();
         String userId = String.valueOf(user.getUserId());
         float amount = insertedUsage.getAmount();
+
+        //SSE에서 해당 userID 찾아서 사용량 보내준다
         SseGroup sseGroup = sseGroupManager.findGroup(homeServerId);
         if (sseGroup != null) {
             Subscriber subscriber = sseGroup.findSubscriber(userId);
@@ -88,7 +115,7 @@ public class UsageController {
                     emitter.send(SseEmitter.event().id("update_usage").name("electricity_usage").data(String.format("{\"plug_id\": \"%s\", \"amount\": \"%f\"}", electricityUsage.getPlugId(), amount)));
                     return ResponseEntity.ok().body(new InsertElectricityUsageResponse(true));
                 } catch (IOException e) {
-                    return ResponseEntity.ok().body(new InsertElectricityUsageResponse(true));
+                    return ResponseEntity.ok().body(new InsertElectricityUsageResponse(false));
                 }
             }
         }
