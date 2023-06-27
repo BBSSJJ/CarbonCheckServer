@@ -78,7 +78,6 @@ public class UsageController {
 
         String homeServerId = user.getHomeServerId();
         String userId = String.valueOf(user.getUserId());
-        String name = user.getName();
         float amount = insertedUsage.getAmount();
         SseGroup sseGroup = sseGroupManager.findGroup(homeServerId);
         if (sseGroup != null) {
@@ -86,8 +85,7 @@ public class UsageController {
             if (subscriber != null) {
                 try {
                     SseEmitter emitter = subscriber.getEmitter();
-                    // ADD USER와 user ID보내줘야함
-                    emitter.send(SseEmitter.event().id("update_usage").name("electricity_usage").data(String.format("{\"name\": \"%s\", \"amount\": \"%f\"}", name, amount)));
+                    emitter.send(SseEmitter.event().id("update_usage").name("electricity_usage").data(String.format("{\"plug_id\": \"%s\", \"amount\": \"%f\"}", electricityUsage.getPlugId(), amount)));
                     return ResponseEntity.ok().body(new InsertElectricityUsageResponse(true));
                 } catch (IOException e) {
                     return ResponseEntity.ok().body(new InsertElectricityUsageResponse(true));
