@@ -15,6 +15,8 @@ public interface UserService {
 
     Optional<User> getUserByEmail(String email);
 
+    Optional<User> getUserById(int userId);
+
     List<GetGroupTargetAmountResponse> getGroupTargetAmount(String homeServerId);
 
     boolean updateUserTargetAmount(int userId, int targetAmount);
