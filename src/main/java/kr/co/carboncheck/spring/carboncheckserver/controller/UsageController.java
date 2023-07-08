@@ -93,12 +93,15 @@ public class UsageController {
         //업데이트 될 때마다 클라이언트에게 보내는 과정
 
         //삽입 실패했을 때
-        if (!insertedUsageOptional.isPresent())
+        if (!insertedUsageOptional.isPresent()) {
             return ResponseEntity.ok().body(new InsertElectricityUsageResponse(false));
+        }
         ElectricityUsage insertedUsage = insertedUsageOptional.get();
         //삽입 성공했을 때
         Optional<User> userOptional = plugService.findUserByPlugId(electricityUsage.getPlugId());
-        if (!userOptional.isPresent()) return ResponseEntity.ok().body(new InsertElectricityUsageResponse(false));
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.ok().body(new InsertElectricityUsageResponse(false));
+        }
         User user = userOptional.get();
 
         String homeServerId = user.getHomeServerId();
@@ -115,10 +118,13 @@ public class UsageController {
                     emitter.send(SseEmitter.event().id("update_usage").name("electricity_usage").data(String.format("{\"plug_id\": \"%s\", \"amount\": \"%f\"}", electricityUsage.getPlugId(), amount)));
                     return ResponseEntity.ok().body(new InsertElectricityUsageResponse(true));
                 } catch (IOException e) {
+                    System.out.println("in exception");
+
                     return ResponseEntity.ok().body(new InsertElectricityUsageResponse(false));
                 }
             }
         }
+        System.out.println("in finish");
 
         return ResponseEntity.ok().body(new InsertElectricityUsageResponse(false));
     }

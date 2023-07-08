@@ -116,7 +116,7 @@ public class UserController {
                     SseEmitter emitter = subscriber.getEmitter();
                     if (result) {
                         System.out.println("사용자에게 얼굴 등록 끝남 메세지 보냄");
-                        emitter.send(SseEmitter.event().data(String.format("{\"msg\": \"%s\", \"id\": %s, \"success\": %b }", "register_finish", null, true)));
+                        emitter.send(SseEmitter.event().    data(String.format("{\"msg\": \"%s\", \"id\": %s, \"success\": %b }", "register_finish", null, true)));
                     }
                     return ResponseEntity.ok().body(true);
                 } catch (IOException e) {
